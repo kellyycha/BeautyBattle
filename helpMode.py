@@ -1,5 +1,4 @@
 from cmu_112_graphics import *
-#from startScreen import StartMode
 
 class HelpMode(Mode):
     def appStarted(mode):

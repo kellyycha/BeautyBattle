@@ -17,6 +17,7 @@ class StartMode(Mode):
         mode.easy = False
         mode.medium = False
         mode.hard = False
+        mode.name = ""
         mode.challengeButton = False
         #images
         parentDir = os.path.abspath("..")
@@ -30,11 +31,12 @@ class StartMode(Mode):
     def mousePressed(mode, event):
         #print(f'mousePressed at {(event.x, event.y)}')
         if mode.showOptions:
-            if mode.challengeButton == True and (400 <= event.x <= 600) and (440 <= event.y < 480):
+            if mode.challengeButton == True and (350 <= event.x <= 650) and (440 <= event.y < 480):
                 mode.app.setActiveMode(mode.app.gameMode)
  
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
                 mode.easy = True
+                mode.name = "Easy"
                 mode.medium = False
                 mode.hard = False
                 mode.challengeButton = True
@@ -42,6 +44,7 @@ class StartMode(Mode):
             elif (470 <= event.x <= 530) and (190 <= event.y < 420):
                 mode.easy = False
                 mode.medium = True
+                mode.name = "Medium"
                 mode.hard = False
                 mode.challengeButton = True
 
@@ -49,6 +52,7 @@ class StartMode(Mode):
                 mode.easy = False
                 mode.medium = False
                 mode.hard = True
+                mode.name = "Hard"
                 mode.challengeButton = True
 
             else:
@@ -89,5 +93,9 @@ class StartMode(Mode):
            
             #show challenge button after selection
             if mode.challengeButton:
-                canvas.create_rectangle(cx - 100, mode.height - 60, cx + 100, mode.height - 20, fill = "pink", outline = "")
-                canvas.create_text(cx, mode.height - 40, text = "Challenge", font = "Arial 30 bold", fill = "black")
+                canvas.create_rectangle(cx - 150, mode.height - 60, cx + 150, mode.height - 20, fill = "pink", outline = "")
+                canvas.create_text(cx, mode.height - 40, text = f"Challenge {mode.name}", font = "Arial 30 bold", fill = "black")
+
+            if mode.challengeButton == False:
+                canvas.create_rectangle(cx - 150, mode.height - 60, cx + 150, mode.height - 20, fill = "pink", outline = "")
+                canvas.create_text(cx, mode.height - 40, text = "No Selection Made", font = "Arial 30 bold", fill = "black")
