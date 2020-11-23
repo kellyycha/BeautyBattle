@@ -55,8 +55,6 @@ class StartMode(Mode):
 
 
     def keyPressed(mode, event):
-        if event.key == "h":
-            mode.app.setActiveMode(mode.app.helpMode)
         if event.key == "c":
             mode.app.setActiveMode(mode.app.gameMode)
 
@@ -92,9 +90,5 @@ class StartMode(Mode):
            
             #show challenge button after selection
             if mode.challengeButton:
-                canvas.create_rectangle(cx - 200, mode.height - 60, cx + 200, mode.height - 20, fill = "yellow", outline = "")
+                canvas.create_rectangle(cx - 200, mode.height - 60, cx + 200, mode.height - 20, fill = "pink", outline = "")
                 canvas.create_text(cx, mode.height - 40, text = "Press C to Challenge", font = "Arial 30 bold", fill = "black")
-
-        #instructions to open help
-        canvas.create_rectangle(10, mode.height - 45, 180, mode.height - 10, fill = "white", outline = "")
-        canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help!", font = "Arial 20", fill = "black")

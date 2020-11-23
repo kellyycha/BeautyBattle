@@ -8,4 +8,4 @@ class HelpMode(Mode):
         canvas.create_text(mode.width/2, 350, text='Press any key to return to the home page!', font=font)
 
     def keyPressed(mode, event):
-        mode.app.setActiveMode(mode.app.startMode)
+        mode.app.setActiveMode(mode.app.gameMode)
