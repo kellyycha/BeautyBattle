@@ -1,12 +1,8 @@
 from cmu_112_graphics import *
 import random
 from startScreen import StartMode
+from gameMode import GameMode
 
-
-class GameMode(Mode):
-    def keyPressed(mode, event):
-        if (event.key == 'h'):
-            mode.app.setActiveMode(mode.app.helpMode)
 
 class HelpMode(Mode):
     def redrawAll(mode, canvas):
