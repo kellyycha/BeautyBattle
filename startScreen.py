@@ -7,9 +7,11 @@ class StartMode(Mode):
         parentDir = os.path.abspath("..")
         img_dir = os.path.join(parentDir, "termProject/images/splashBG.jpg")
         mode.background = mode.loadImage(img_dir)
+
         mode.time = 0
         mode.size = 0
         mode.textCX = mode.width
+
         mode.opponentOptions()
 
     def opponentOptions(mode):
@@ -31,12 +33,12 @@ class StartMode(Mode):
     def mousePressed(mode, event):
         #print(f'mousePressed at {(event.x, event.y)}')
         if mode.showOptions:
-            if mode.challengeButton == True and (350 <= event.x <= 650) and (440 <= event.y < 480):
+            if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480):
                 mode.app.setActiveMode(mode.app.gameMode)
  
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
                 mode.easy = True
-                mode.name = "Easy"
+                mode.name = "Amateur"
                 mode.medium = False
                 mode.hard = False
                 mode.challengeButton = True
@@ -44,7 +46,7 @@ class StartMode(Mode):
             elif (470 <= event.x <= 530) and (190 <= event.y < 420):
                 mode.easy = False
                 mode.medium = True
-                mode.name = "Medium"
+                mode.name = "Professional"
                 mode.hard = False
                 mode.challengeButton = True
 
@@ -52,7 +54,7 @@ class StartMode(Mode):
                 mode.easy = False
                 mode.medium = False
                 mode.hard = True
-                mode.name = "Hard"
+                mode.name = "Expert"
                 mode.challengeButton = True
 
             else:
@@ -85,17 +87,17 @@ class StartMode(Mode):
             
             #show options
             canvas.create_image(cx - 200, cy + 50, image = ImageTk.PhotoImage(mode.easyOpponent))
-            canvas.create_text(cx - 200, 150, text = "Easy", fill = "black", font = "Arial 20 bold")
+            canvas.create_text(cx - 200, 150, text = "Amateur", fill = "black", font = "Arial 20 bold")
             canvas.create_image(cx, cy + 50, image = ImageTk.PhotoImage(mode.mediumOpponent))
-            canvas.create_text(cx, 150, text = "Medium", fill = "black", font = "Arial 20 bold")
+            canvas.create_text(cx, 150, text = "Professional", fill = "black", font = "Arial 20 bold")
             canvas.create_image(cx + 200, cy + 50, image = ImageTk.PhotoImage(mode.hardOpponent))
-            canvas.create_text(cx + 200, 150, text = "Hard", fill = "black", font = "Arial 20 bold")
+            canvas.create_text(cx + 200, 150, text = "Expert", fill = "black", font = "Arial 20 bold")
            
             #show challenge button after selection
             if mode.challengeButton:
-                canvas.create_rectangle(cx - 150, mode.height - 60, cx + 150, mode.height - 20, fill = "pink", outline = "")
+                canvas.create_rectangle(cx - 180, mode.height - 60, cx + 180, mode.height - 20, fill = "pink", outline = "")
                 canvas.create_text(cx, mode.height - 40, text = f"Challenge {mode.name}", font = "Arial 30 bold", fill = "black")
 
             if mode.challengeButton == False:
-                canvas.create_rectangle(cx - 150, mode.height - 60, cx + 150, mode.height - 20, fill = "pink", outline = "")
+                canvas.create_rectangle(cx - 180, mode.height - 60, cx + 180, mode.height - 20, fill = "pink", outline = "")
                 canvas.create_text(cx, mode.height - 40, text = "No Selection Made", font = "Arial 30 bold", fill = "black")
