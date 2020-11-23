@@ -10,10 +10,10 @@ class HelpMode(Mode):
         cx, cy = mode.width // 2, mode.height // 2
         canvas.create_image(cx, cy, image = ImageTk.PhotoImage(mode.background))
 
-        canvas.create_text(mode.width/2, 150, text='This is the help screen!', font='Arial 26 bold')
-        canvas.create_text(mode.width/2, 250, text='(Insert helpful message here)', font='Arial 20')
-        canvas.create_text(mode.width/2, 350, text='Press H return to the game', font='Arial 20 bold')
-        canvas.create_text(mode.width/2, 400, text='Press S return to the start screen', font='Arial 20 bold')
+        canvas.create_text(cx, 100, text='This is the help screen!', font='Arial 30 bold')
+        canvas.create_text(cx, 200, text='(Insert helpful message here)', font='Arial 20')
+        canvas.create_text(cx, 375, text='Press H return to the game', font='Arial 20 bold')
+        canvas.create_text(cx, 400, text='Press S return to the start screen', font='Arial 20 bold')
 
     def keyPressed(mode, event):
         if event.key == "h":
