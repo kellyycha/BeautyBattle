@@ -5,4 +5,4 @@ import os
 
 class GameMode(Mode):
     def redrawAll(mode, canvas):
-        canvas.create_text(mode.width/2, 150, text='Game', fill = "black", font= "Arial 30 bold")
+        canvas.create_text(mode.width//2, 150, text='Game', font="Arial 30 bold")

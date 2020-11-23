@@ -1,6 +1,5 @@
 from cmu_112_graphics import *
 from tkinter import *
-import random
 import os
 
 class StartMode(Mode):
@@ -59,7 +58,7 @@ class StartMode(Mode):
         if event.key == "h":
             mode.app.setActiveMode(mode.app.helpMode)
         if event.key == "c":
-            mode.app.setActiveMode(mode.app.gameMode)
+            mode.app.setActiveMode(mode.app.customerMode)
 
     def timerFired(mode):
         mode.time += mode.timerDelay

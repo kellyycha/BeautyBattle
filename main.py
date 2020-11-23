@@ -1,8 +1,8 @@
 from cmu_112_graphics import *
-import random
 from startScreen import StartMode
+from customerScreen import CustomerMode
+from helpMode import HelpMode
 from gameMode import GameMode
-
 
 class HelpMode(Mode):
     def redrawAll(mode, canvas):
@@ -18,9 +18,9 @@ class MyModalApp(ModalApp):
     def appStarted(app):
         app.startMode = StartMode()
         app.gameMode = GameMode()
+        app.customerMode =  CustomerMode()
         app.helpMode = HelpMode()
         app.setActiveMode(app.startMode)
         app.timerDelay = 50
-        
 
 MyModalApp(width=1000, height=500)
