@@ -58,7 +58,7 @@ class StartMode(Mode):
         if event.key == "h":
             mode.app.setActiveMode(mode.app.helpMode)
         if event.key == "c":
-            mode.app.setActiveMode(mode.app.customerMode)
+            mode.app.setActiveMode(mode.app.gameMode)
 
     def timerFired(mode):
         mode.time += mode.timerDelay
@@ -77,7 +77,7 @@ class StartMode(Mode):
         if mode.showOptions == False:
             text = "  Welcome to the\nKC Beauty Studio"
             font = f"Arial {mode.size} bold"
-            canvas.create_text(cx, cy - 100, text = text, fill = 'black', font = font)
+            canvas.create_text(cx, cy, text = text, fill = 'black', font = font)
         else:
             #title
             canvas.create_text(cx, 70, text = "Select an Opponent", font = "Arial 50 bold", fill = "black")

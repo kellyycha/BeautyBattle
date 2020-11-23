@@ -1,6 +1,5 @@
 from cmu_112_graphics import *
 from startScreen import StartMode
-from customerScreen import CustomerMode
 from helpMode import HelpMode
 from gameMode import GameMode
 
@@ -18,7 +17,6 @@ class MyModalApp(ModalApp):
     def appStarted(app):
         app.startMode = StartMode()
         app.gameMode = GameMode()
-        app.customerMode =  CustomerMode()
         app.helpMode = HelpMode()
         app.setActiveMode(app.startMode)
         app.timerDelay = 50
