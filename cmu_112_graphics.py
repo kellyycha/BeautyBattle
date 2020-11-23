@@ -204,7 +204,7 @@ class WrappedCanvas(Canvas):
     def create_rectangle(self, *args, **kwargs): self.log('create_rectangle', args, kwargs); return super().create_rectangle(*args, **kwargs)
     def create_text(self, *args, **kwargs): self.log('create_text', args, kwargs); return super().create_text(*args, **kwargs)
     def create_window(self, *args, **kwargs): self.log('create_window', args, kwargs); return super().create_window(*args, **kwargs)
-
+    
     def create_image(self, *args, **kwargs):
         self.log('create_image', args, kwargs);
         usesImage = 'image' in kwargs
