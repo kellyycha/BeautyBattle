@@ -110,7 +110,7 @@ class GameMode(Mode):
 
             #instructions to open help
             canvas.create_rectangle(10, mode.height - 45, 180, mode.height - 10, fill = "white", outline = "")
-            canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help!", font = "Arial 20", fill = "black")
+            canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help", font = "Arial 20 bold", fill = "black")
 
         elif mode.gameScreen:
             canvas.create_rectangle(cx - 110, 0, cx + 110, 40, fill = "white", outline = "black")

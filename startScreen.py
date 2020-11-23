@@ -28,7 +28,11 @@ class StartMode(Mode):
         mode.hardOpponent = mode.scaleImage(mode.loadImage(img_dir), 1/4)
 
     def mousePressed(mode, event):
+        #print(f'mousePressed at {(event.x, event.y)}')
         if mode.showOptions:
+            if mode.challengeButton == True and (400 <= event.x <= 600) and (440 <= event.y < 480):
+                mode.app.setActiveMode(mode.app.gameMode)
+ 
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
                 mode.easy = True
                 mode.medium = False
@@ -52,11 +56,6 @@ class StartMode(Mode):
                 mode.medium = False
                 mode.hard = False
                 mode.challengeButton = False
-
-
-    def keyPressed(mode, event):
-        if event.key == "c":
-            mode.app.setActiveMode(mode.app.gameMode)
 
     def timerFired(mode):
         mode.time += mode.timerDelay
@@ -90,5 +89,5 @@ class StartMode(Mode):
            
             #show challenge button after selection
             if mode.challengeButton:
-                canvas.create_rectangle(cx - 200, mode.height - 60, cx + 200, mode.height - 20, fill = "pink", outline = "")
-                canvas.create_text(cx, mode.height - 40, text = "Press C to Challenge", font = "Arial 30 bold", fill = "black")
+                canvas.create_rectangle(cx - 100, mode.height - 60, cx + 100, mode.height - 20, fill = "pink", outline = "")
+                canvas.create_text(cx, mode.height - 40, text = "Challenge", font = "Arial 30 bold", fill = "black")
