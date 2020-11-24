@@ -1,11 +1,14 @@
 from cmu_112_graphics import *
 from tkinter import *
 import os
+from gameMode import GameMode
+
 
 class StartMode(Mode):
     def appStarted(mode):
         parentDir = os.path.abspath("..")
-        img_dir = os.path.join(parentDir, "termProject/images/splashBG.jpg")
+        # Background image: https://cdn4.vectorstock.com/i/1000x1000/85/23/beauty-background-with-icons-cosmetics-vector-1998523.jpg 
+        img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
         mode.background = mode.loadImage(img_dir)
 
         mode.time = 0
@@ -23,18 +26,22 @@ class StartMode(Mode):
         mode.challengeButton = False
         #images
         parentDir = os.path.abspath("..")
-        img_dir = os.path.join(parentDir, "termProject/images/easyOpponent.png")
-        mode.easyOpponent = mode.scaleImage(mode.loadImage(img_dir), 1/4)
-        img_dir = os.path.join(parentDir, "termProject/images/mediumOpponent.png")
-        mode.mediumOpponent = mode.scaleImage(mode.loadImage(img_dir), 1/4)
-        img_dir = os.path.join(parentDir, "termProject/images/hardOpponent.png")
-        mode.hardOpponent = mode.scaleImage(mode.loadImage(img_dir), 1/4)
+        # Amateur image: https://graphicmama.com/cartoon-character/cute-office-girl-cartoon-vector-character 
+        img_dir = os.path.join(parentDir, "termProject/images/amateur.png")
+        mode.amateur = mode.scaleImage(mode.loadImage(img_dir), 1/4)
+        # Professional image: https://graphicmama.com/cartoon-character/pretty-girl-with-long-hair-cartoon-vector-character 
+        img_dir = os.path.join(parentDir, "termProject/images/professional.png")
+        mode.professional = mode.scaleImage(mode.loadImage(img_dir), 1/4)
+        # Expert image: https://graphicmama.com/cartoon-character/cartoon-elegant-woman-vector-character 
+        img_dir = os.path.join(parentDir, "termProject/images/expert.png")
+        mode.expert = mode.scaleImage(mode.loadImage(img_dir), 1/4)
 
     def mousePressed(mode, event):
         #print(f'mousePressed at {(event.x, event.y)}')
         if mode.showOptions:
             if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480):
                 mode.app.setActiveMode(mode.app.gameMode)
+                #GameMode.appStarted(mode) <-- restart when called
  
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
                 mode.easy = True
@@ -86,11 +93,11 @@ class StartMode(Mode):
             canvas.create_text(cx, 70, text = "Select an Opponent", font = "Arial 50 bold", fill = "black")
             
             #show options
-            canvas.create_image(cx - 200, cy + 50, image = ImageTk.PhotoImage(mode.easyOpponent))
+            canvas.create_image(cx - 200, cy + 50, image = ImageTk.PhotoImage(mode.amateur))
             canvas.create_text(cx - 200, 150, text = "Amateur", fill = "black", font = "Arial 20 bold")
-            canvas.create_image(cx, cy + 50, image = ImageTk.PhotoImage(mode.mediumOpponent))
+            canvas.create_image(cx, cy + 50, image = ImageTk.PhotoImage(mode.professional))
             canvas.create_text(cx, 150, text = "Professional", fill = "black", font = "Arial 20 bold")
-            canvas.create_image(cx + 200, cy + 50, image = ImageTk.PhotoImage(mode.hardOpponent))
+            canvas.create_image(cx + 200, cy + 50, image = ImageTk.PhotoImage(mode.expert))
             canvas.create_text(cx + 200, 150, text = "Expert", fill = "black", font = "Arial 20 bold")
            
             #show challenge button after selection

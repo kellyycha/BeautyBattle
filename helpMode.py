@@ -3,7 +3,7 @@ from cmu_112_graphics import *
 class HelpMode(Mode):
     def appStarted(mode):
         parentDir = os.path.abspath("..")
-        img_dir = os.path.join(parentDir, "termProject/images/splashBG.jpg")
+        img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
         mode.background = mode.loadImage(img_dir)
 
     def redrawAll(mode, canvas):
