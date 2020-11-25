@@ -1,7 +1,7 @@
 from cmu_112_graphics import *
 from tkinter import *
 import os
-from gameMode import GameMode
+#from gameMode import GameMode
 
 
 class StartMode(Mode):
@@ -37,7 +37,6 @@ class StartMode(Mode):
         mode.expert = mode.scaleImage(mode.loadImage(img_dir), 1/4)
 
     def mousePressed(mode, event):
-        #print(f'mousePressed at {(event.x, event.y)}')
         if mode.showOptions:
             if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480):
                 mode.app.setActiveMode(mode.app.gameMode)

@@ -22,6 +22,16 @@ class GameMode(Mode):
         mode.colorPicker()
         mode.productImages()
 
+        mode.eyeshadowSelection = False
+        mode.blushSelection = False
+        mode.lipstickSelection = False
+        mode.eraserSelection = False
+
+        mode.penX = mode.penY = mode.penR = 0
+        mode.selectedColor = '' 
+        mode.colorShow = False
+        mode.drawnDots = []
+
     def customer(mode):
         parentDir = os.path.abspath("..")
         # Customers generated with: https://www.cartoonify.de/#cartoonify
@@ -45,36 +55,97 @@ class GameMode(Mode):
         img_dir = os.path.join(parentDir, "termProject/images/erase.png")
         mode.erase = mode.scaleImage(mode.loadImage(img_dir), 1/5)
 
-
     def colorPicker(mode):
-        eyeshadowColors = ["pink", "orange", "yellow", "green", "blue", "purple"]
-        mode.eyeshadowColor = random.choice(eyeshadowColors)
-        blushColors = ["pink", "red", "peach", "orange"]
-        mode.blushColor = random.choice(blushColors)
-        lipstickColors = ["pink", "red", "nude", "purple"]
-        mode.lipstickColor = random.choice(lipstickColors)
+        mode.eyeshadowColors = ["pink", "orange", "gold", "green", "blue", "purple"]
+        mode.eyeshadowColorNames = ["hot pink", "dark orange", "gold", "yellow green", "deep sky blue", "medium orchid"]
+        mode.eyeshadowColor = random.choice(mode.eyeshadowColors)
+        mode.blushColors = ["pink", "red", "peach", "orange"]
+        mode.blushColorNames = ["hot pink", "red", "salmon", "dark orange"]
+        mode.blushColor = random.choice(mode.blushColors)
+        mode.lipstickColors = ["pink", "red", "nude", "purple"]
+        mode.lipstickColorNames = ["hot pink", "red", "LightSalmon2", "medium orchid"]
+        mode.lipstickColor = random.choice(mode.lipstickColors)   
     
     def mousePressed(mode, event):
+        print(f'mousePressed at {(event.x, event.y)}')
+
         if mode.timeEnd:
             return
 
         if mode.pause == False:
-
             if mode.customerScreen:
-                if (700 <= event.x <= 800) and (350 <= event.y < 400):
+                if (670 <= event.x <= 775) and (370 <= event.y < 425):
                     mode.customerScreen = False
                     mode.gameScreen = True
             
             if mode.gameScreen:
-                #click on each thing appears color options
-                #if click on mode.eyeshadowSelection: rest is false
-                #click on a color in color option = can draw
-                pass
+                if (mode.width - 100 <= event.x <= mode.width) and (0 <= event.y < 125):
+                    mode.eyeshadowSelection = True
+                    mode.blushSelection = False
+                    mode.lipstickSelection = False
+                    mode.eraserSelection = False
+                    mode.colorShow = False
+                    mode.penR = 10
 
-    def mouseDrag(mode, event):
+                elif (mode.width - 100 <= event.x <= mode.width) and (125 <= event.y < 250):
+                    mode.eyeshadowSelection = False
+                    mode.blushSelection = True
+                    mode.lipstickSelection = False
+                    mode.eraserSelection = False
+                    mode.colorShow = False
+                    mode.penR = 20
+
+                elif (mode.width - 100 <= event.x <= mode.width) and (250 <= event.y < 375):
+                    mode.eyeshadowSelection = False
+                    mode.blushSelection = False
+                    mode.lipstickSelection = True
+                    mode.eraserSelection = False
+                    mode.colorShow = False
+                    mode.penR = 5
+
+                elif (mode.width - 100 <= event.x <= mode.width) and (375 <= event.y < 500):
+                    mode.eyeshadowSelection = False
+                    mode.blushSelection = False
+                    mode.lipstickSelection = False
+                    mode.eraserSelection = True
+                    mode.colorShow = False
+                    mode.penR = 5
+                    mode.selectedColor = ''
+
+                if mode.eyeshadowSelection:
+                    for i in range(len(mode.eyeshadowColorNames)):
+                        if (850 <= event.x <= 900) and (i*50 <= event.y < (i+1)*50):
+                            mode.colorShow = False
+                            mode.selectedColor = mode.eyeshadowColorNames[i]
+
+                if mode.blushSelection:
+                    for i in range(len(mode.blushColorNames)):
+                        if (850 <= event.x <= 900) and (125 + i*50 <= event.y < 125 + (i+1)*50):
+                            mode.colorShow = False
+                            mode.selectedColor = mode.blushColorNames[i]
+                
+                if mode.lipstickSelection:
+                    for i in range(len(mode.lipstickColorNames)):
+                        if (850 <= event.x <= 900) and (250 + i*50 <= event.y < 250 + (i+1)*50):
+                            mode.colorShow = False
+                            mode.selectedColor = mode.lipstickColorNames[i]
+
+
+    def mouseDragged(mode, event):
         if mode.pause == False:
-            #color on face
-            pass
+            if (600 <= event.x <= 755) and (190 <= event.y < 390):
+                mode.colorShow = True
+                mode.penX = event.x
+                mode.penY = event.y
+                mode.drawnDots.append((event.x, event.y, mode.penR, mode.selectedColor))
+            if mode.eraserSelection:
+                GameMode.eraserIntersect(mode)
+
+    def eraserIntersect(mode):
+        for (cx, cy, r, color) in mode.drawnDots:
+            distanceFormula = ((mode.penX - cx)**2 + (mode.penY - cy)**2)**0.5
+            if (distanceFormula <= mode.penR + r):
+                mode.drawnDots.remove((cx, cy, r, color))
 
     def keyPressed(mode, event):
         if event.key == "h":
@@ -148,11 +219,32 @@ class GameMode(Mode):
                 canvas.create_text(cx, cy, text="Time is Up!", font="Arial 50 bold")
 
     def drawColorOptions(mode, canvas):
-        #if mode.eyeshadowSelection == True:
-            #draw color options
-        #elif mode.blushSelection == True:
-        #elif mode.lipstickSelection == True:
-        pass
+
+        if mode.eyeshadowSelection == True:
+            for i in range(len(mode.eyeshadowColors)):
+                canvas.create_rectangle(mode.width - 150, i * 50, mode.width - 100, (i+1) * 50, fill = mode.eyeshadowColorNames[i])
+                canvas.create_text(mode.width - 125, (i + 0.5) * 50, text = f'{mode.eyeshadowColors[i]}', font = "Arial 15")
+
+        elif mode.blushSelection == True:
+            for i in range(len(mode.blushColors)):
+                canvas.create_rectangle(mode.width - 150, 125 + i * 50, mode.width - 100, 125 + (i+1) * 50, fill = mode.blushColorNames[i])
+                canvas.create_text(mode.width - 125, 125 + (i + 0.5) * 50, text = f'{mode.blushColors[i]}', font = "Arial 15")
+
+        elif mode.lipstickSelection == True:
+            for i in range(len(mode.lipstickColors)):
+                canvas.create_rectangle(mode.width - 150, 250 + i * 50, mode.width - 100, 250 + (i+1) * 50, fill = mode.lipstickColorNames[i])
+                canvas.create_text(mode.width - 125, 250 + (i + 0.5) * 50, text = f'{mode.lipstickColors[i]}', font = "Arial 15")
+
+    def drawing(mode, canvas):
+        for (cx, cy, r, color) in mode.drawnDots[:-1]:
+            canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = color, outline = '')
+        if mode.colorShow == True:
+            cx = mode.penX
+            cy = mode.penY
+            r = mode.penR
+            color = mode.selectedColor
+            canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = color)
+
 
     def redrawAll(mode, canvas):
         cx, cy = mode.width // 2, mode.height // 2
@@ -165,4 +257,5 @@ class GameMode(Mode):
         elif mode.gameScreen:
             GameMode.drawGameScreen(mode,canvas)
             GameMode.drawColorOptions(mode, canvas)
+            GameMode.drawing(mode, canvas)
         
