@@ -2,12 +2,14 @@ from cmu_112_graphics import *
 from tkinter import *
 import random
 import os
+from startScreen import *
 
 class GameMode(Mode):
     def appStarted(mode):
         parentDir = os.path.abspath("..")
         img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
         mode.background = mode.loadImage(img_dir)
+        mode.cx, mode.cy = mode.width // 2, mode.height // 2
         
         mode.customerScreen = True
         mode.gameScreen = False
@@ -31,6 +33,9 @@ class GameMode(Mode):
         mode.selectedColor = '' 
         mode.colorShow = False
         mode.drawnDots = []
+
+        mode.yourScore = 100
+        mode.opponentScore = 100
 
     def customer(mode):
         parentDir = os.path.abspath("..")
@@ -77,10 +82,16 @@ class GameMode(Mode):
                 if (670 <= event.x <= 775) and (370 <= event.y < 425):
                     mode.customerScreen = False
                     mode.gameScreen = True
+                    mode.scoringScreen = False
             
             if mode.gameScreen: 
+                #submit
+                if (420 <= event.x <= 520) and (230 <= event.y < 270):
+                    mode.scoringScreen = True
+                    mode.gameScreen = False
+                    mode.customerScreen = False
                 #eyeshadow selected
-                if (mode.width - 100 <= event.x <= mode.width) and (0 <= event.y < 125):
+                elif (mode.width - 100 <= event.x <= mode.width) and (0 <= event.y < 125):
                     mode.eyeshadowSelection = True
                     mode.blushSelection = False
                     mode.lipstickSelection = False
@@ -134,13 +145,14 @@ class GameMode(Mode):
 
     def mouseDragged(mode, event):
         if mode.pause == False:
-            if (600 <= event.x <= 780) and (190 <= event.y < 390):
-                mode.colorShow = True
-                mode.penX = event.x
-                mode.penY = event.y
-                mode.drawnDots.append((event.x, event.y, mode.penR, mode.selectedColor))
-            if mode.eraserSelection:
-                GameMode.eraserIntersect(mode)
+            if mode.gameScreen:
+                if (600 <= event.x <= 780) and (190 <= event.y < 390):
+                    mode.colorShow = True
+                    mode.penX = event.x
+                    mode.penY = event.y
+                    mode.drawnDots.append((event.x, event.y, mode.penR, mode.selectedColor))
+                if mode.eraserSelection:
+                    GameMode.eraserIntersect(mode)
 
     def eraserIntersect(mode):
         for (cx, cy, r, color) in mode.drawnDots:
@@ -169,38 +181,39 @@ class GameMode(Mode):
 
         if mode.timeEnd:
             mode.scoringScreen = True
+            mode.gameScreen = False
 
     def drawCustomerScreen(mode, canvas):
-        cx, cy = mode.width // 2, mode.height // 2
-
-        canvas.create_text(cx, 70, text = "A customer has arrived!", font = "Arial 50 bold", fill = "black")
-        canvas.create_image(cx - 150, cy + 50, image = ImageTk.PhotoImage(mode.customer))
-        canvas.create_oval(cx + 225 + 220, cy + 100, cx + 225 - 220, cy - 100, fill = "white", outline = "pink")
-        canvas.create_text(cx + 225, cy, text = f"\"I would like \n{mode.eyeshadowColor} eyeshadow, \nwith {mode.blushColor} blush, \nand {mode.lipstickColor} lipstick.\"",
+        canvas.create_text(mode.cx, 70, text = "A customer has arrived!", font = "Arial 50 bold", fill = "black")
+        canvas.create_image(mode.cx - 150, mode.cy + 50, image = ImageTk.PhotoImage(mode.customer))
+        canvas.create_oval(mode.cx + 225 + 220, mode.cy + 100, mode.cx + 225 - 220, mode.cy - 100, fill = "white", outline = "pink")
+        canvas.create_text(mode.cx + 225, mode.cy, text = f"\"I would like \n{mode.eyeshadowColor} eyeshadow, \nwith {mode.blushColor} blush, \nand {mode.lipstickColor} lipstick.\"",
                                 font = "Arial 30 bold")
-        canvas.create_rectangle(cx + 175, mode.height - 125, cx + 275, mode.height - 75, fill = "pink", outline = "")
-        canvas.create_text(cx + 225, mode.height - 100, text = "Go!", font = "Arial 30 bold", fill = "black")
+        canvas.create_rectangle(mode.cx + 175, mode.height - 125, mode.cx + 275, mode.height - 75, fill = "pink", outline = "")
+        canvas.create_text(mode.cx + 225, mode.height - 100, text = "Go!", font = "Arial 30 bold", fill = "black")
 
         #instructions to open help
         canvas.create_rectangle(10, mode.height - 45, 180, mode.height - 10, fill = "white", outline = "")
         canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help", font = "Arial 20 bold", fill = "black")
 
     def drawGameScreen(mode, canvas):
-        cx, cy = mode.width // 2, mode.height // 2
-
         #timer
-        canvas.create_line(cx - 30, 0, cx - 30, mode.height, fill = "black", width = 5)
-        canvas.create_rectangle(cx - 80 - 30, 0, cx + 80 - 30, 40, fill = "white", outline = "black")
-        canvas.create_text(cx - 30, 20, text=f'{mode.timeLeft}s remaining', font="Arial 20 bold")
+        canvas.create_line(mode.cx - 30, 0, mode.cx - 30, mode.height, fill = "black", width = 5)
+        canvas.create_rectangle(mode.cx - 80 - 30, 0, mode.cx + 80 - 30, 40, fill = "white", outline = "black")
+        canvas.create_text(mode.cx - 30, 20, text=f'{mode.timeLeft}s remaining', font="Arial 20 bold")
 
         #customer and order
-        canvas.create_text(cx // 2 - 30, 70, text='Opponent', font="Arial 30 bold")
-        canvas.create_image(cx // 2 - 30, cy + 50, image = ImageTk.PhotoImage(mode.customer))
-        canvas.create_text(cx + cx // 2 - 60, 70, text='You', font="Arial 30 bold")
-        canvas.create_image(cx + cx // 2 - 60, cy + 50, image = ImageTk.PhotoImage(mode.customer))
-        canvas.create_rectangle(cx - 100 - 30, 50, cx + 100 - 30, 160, fill = "white", outline = "black")
-        canvas.create_text(cx - 30, 60, text = f"Check List:\n- {mode.eyeshadowColor} eyeshadow\n- {mode.blushColor} blush\n- {mode.lipstickColor} lipstick",
+        canvas.create_text(mode.cx // 2 - 30, 70, text='Opponent', font="Arial 30 bold")
+        canvas.create_image(mode.cx // 2 - 30, mode.cy + 50, image = ImageTk.PhotoImage(mode.customer))
+        canvas.create_text(mode.cx + mode.cx // 2 - 60, 70, text='You', font="Arial 30 bold")
+        canvas.create_image(mode.cx + mode.cx // 2 - 60, mode.cy + 50, image = ImageTk.PhotoImage(mode.customer))
+        canvas.create_rectangle(mode.cx - 100 - 30, 50, mode.cx + 100 - 30, 160, fill = "white", outline = "black")
+        canvas.create_text(mode.cx - 30, 60, text = f"Check List:\n- {mode.eyeshadowColor} eyeshadow\n- {mode.blushColor} blush\n- {mode.lipstickColor} lipstick",
                                 font = "Arial 20", anchor = "n")
+        
+        #submit
+        canvas.create_rectangle(mode.cx - 50 - 30, mode.cy - 20, mode.cx + 50 - 30, mode.cy + 20, fill = "pink", outline = "")
+        canvas.create_text(mode.cx - 30, mode.cy, text = "SUBMIT")
             
         #makeup
         products = ["Eyeshadow", "Blush", "Lipstick", "Erase"]
@@ -216,14 +229,11 @@ class GameMode(Mode):
         canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help \nPress P to Pause", font = "Arial 20 bold", fill = "black")
 
     def timeIsUp(mode, canvas):
-        cx, cy = mode.width // 2, mode.height // 2
         if mode.timeEnd:
-                canvas.create_rectangle(cx - 200, cy - 100, cx + 200, cy + 100, fill = "gray", outline = "black")
-                canvas.create_text(cx, cy, text="Time is Up!", font="Arial 50 bold")
+                canvas.create_rectangle(mode.cx - 200, mode.cy - 100, mode.cx + 200, mode.cy + 100, fill = "gray", outline = "black")
+                canvas.create_text(mode.cx, mode.cy, text="Time is Up!", font="Arial 50 bold")
 
     def drawColorOptions(mode, canvas):
-        cx, cy = mode.width // 2, mode.height // 2
-
         if mode.eyeshadowSelection == True:
             for i in range(len(mode.eyeshadowColors)):
                 canvas.create_rectangle(mode.width - 150, i * 50, mode.width - 100, (i+1) * 50, fill = mode.eyeshadowColorNames[i])
@@ -234,7 +244,7 @@ class GameMode(Mode):
                             (712, 273),(710, 276),(708, 279),(708, 284),(709, 287)]
             leftEyeBounds = []
             for (x,y) in rightEyeBounds:
-                newX = (mode.width - 30 - x) + (cx - 90)
+                newX = (mode.width - 30 - x) + (mode.cx - 90)
                 leftEyeBounds.append((newX,y))
             for (x,y) in rightEyeBounds:
                 canvas.create_text(x, y, text = '·')
@@ -249,7 +259,7 @@ class GameMode(Mode):
                                 (741, 348),(726, 344),(715, 339),(711, 330)]
             leftBlushBounds = []
             for (x,y) in rightBlushBounds:
-                newX = (mode.width - 30 - x) + (cx - 90)
+                newX = (mode.width - 30 - x) + (mode.cx - 90)
                 leftBlushBounds.append((newX,y))
             for (x,y) in rightBlushBounds:
                 canvas.create_text(x, y, text = '·')
@@ -264,7 +274,7 @@ class GameMode(Mode):
                                 (690, 370),(694, 369),(698, 368),(703, 367),(707, 364), (710, 362)]
             leftLipstickBounds = []
             for (x,y) in rightLipstickBounds:
-                newX = (mode.width - 30 - x) + (cx - 90)
+                newX = (mode.width - 30 - x) + (mode.cx - 90)
                 leftLipstickBounds.append((newX,y))
             for (x,y) in rightLipstickBounds:
                 canvas.create_text(x, y, text = '·')
@@ -281,13 +291,27 @@ class GameMode(Mode):
             color = mode.selectedColor
             canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = color)
 
+    def drawScoringScreen(mode, canvas):
+        global name
+        #take screenshot of finished pictures to compare and score
+
+        #labels
+        canvas.create_text(mode.cx // 2, 70, text='Opponent', font="Arial 30 bold")
+        canvas.create_text(mode.cx // 2, 150, text=f'Score: {mode.opponentScore}', font="Arial 30 ")
+        canvas.create_text(mode.cx + mode.cx // 2, 70, text='You', font="Arial 30 bold")
+        canvas.create_text(mode.cx + mode.cx // 2, 150, text=f'Score: {mode.yourScore}', font="Arial 30 ")
+
+        if mode.yourScore > mode.opponentScore:
+            canvas.create_text(mode.cx, mode.cy, text='You Win! Congrats on getting hired!', font="Arial 40 bold")
+        elif mode.yourScore < mode.opponentScore:
+            canvas.create_text(mode.cx, mode.cy, text=f'Better luck next time, {name} beat you.', font="Arial 40 bold")
+
+        elif mode.yourScore == mode.opponentScore:
+            canvas.create_text(mode.cx, mode.cy, text=f"It's a tie... try to beat {name} next time.", font="Arial 40 bold")
 
     def redrawAll(mode, canvas):
-        cx, cy = mode.width // 2, mode.height // 2
-
         #background
-        canvas.create_image(cx, cy, image = ImageTk.PhotoImage(mode.background))
-
+        canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
         if mode.customerScreen:
             GameMode.drawCustomerScreen(mode, canvas)
         elif mode.gameScreen:
@@ -295,4 +319,5 @@ class GameMode(Mode):
             GameMode.drawColorOptions(mode, canvas)
             GameMode.drawing(mode, canvas)
             GameMode.timeIsUp(mode, canvas)
-        
+        elif mode.scoringScreen:
+            GameMode.drawScoringScreen(mode, canvas)
