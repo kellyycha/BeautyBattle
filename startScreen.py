@@ -1,7 +1,6 @@
 from cmu_112_graphics import *
 from tkinter import *
 import os
-#from gameMode import GameMode
 
 
 class StartMode(Mode):

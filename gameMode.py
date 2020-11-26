@@ -67,7 +67,7 @@ class GameMode(Mode):
         mode.lipstickColor = random.choice(mode.lipstickColors)   
     
     def mousePressed(mode, event):
-        print(f'mousePressed at {(event.x, event.y)}')
+        print(f'{(event.x,event.y)},')
 
         if mode.timeEnd:
             return
@@ -78,23 +78,24 @@ class GameMode(Mode):
                     mode.customerScreen = False
                     mode.gameScreen = True
             
-            if mode.gameScreen:
+            if mode.gameScreen: 
+                #eyeshadow selected
                 if (mode.width - 100 <= event.x <= mode.width) and (0 <= event.y < 125):
                     mode.eyeshadowSelection = True
                     mode.blushSelection = False
                     mode.lipstickSelection = False
                     mode.eraserSelection = False
                     mode.colorShow = False
-                    mode.penR = 10
-
+                    mode.penR = 5
+                #blush selected
                 elif (mode.width - 100 <= event.x <= mode.width) and (125 <= event.y < 250):
                     mode.eyeshadowSelection = False
                     mode.blushSelection = True
                     mode.lipstickSelection = False
                     mode.eraserSelection = False
                     mode.colorShow = False
-                    mode.penR = 20
-
+                    mode.penR = 10
+                #lipstick selected
                 elif (mode.width - 100 <= event.x <= mode.width) and (250 <= event.y < 375):
                     mode.eyeshadowSelection = False
                     mode.blushSelection = False
@@ -102,7 +103,7 @@ class GameMode(Mode):
                     mode.eraserSelection = False
                     mode.colorShow = False
                     mode.penR = 5
-
+                #eraser selected
                 elif (mode.width - 100 <= event.x <= mode.width) and (375 <= event.y < 500):
                     mode.eyeshadowSelection = False
                     mode.blushSelection = False
@@ -111,19 +112,19 @@ class GameMode(Mode):
                     mode.colorShow = False
                     mode.penR = 5
                     mode.selectedColor = ''
-
+                #pick eyeshadow color
                 if mode.eyeshadowSelection:
                     for i in range(len(mode.eyeshadowColorNames)):
                         if (850 <= event.x <= 900) and (i*50 <= event.y < (i+1)*50):
                             mode.colorShow = False
                             mode.selectedColor = mode.eyeshadowColorNames[i]
-
+                #pick blush color
                 if mode.blushSelection:
                     for i in range(len(mode.blushColorNames)):
                         if (850 <= event.x <= 900) and (125 + i*50 <= event.y < 125 + (i+1)*50):
                             mode.colorShow = False
                             mode.selectedColor = mode.blushColorNames[i]
-                
+                #pick lipstick color
                 if mode.lipstickSelection:
                     for i in range(len(mode.lipstickColorNames)):
                         if (850 <= event.x <= 900) and (250 + i*50 <= event.y < 250 + (i+1)*50):
@@ -133,7 +134,7 @@ class GameMode(Mode):
 
     def mouseDragged(mode, event):
         if mode.pause == False:
-            if (600 <= event.x <= 755) and (190 <= event.y < 390):
+            if (600 <= event.x <= 780) and (190 <= event.y < 390):
                 mode.colorShow = True
                 mode.penX = event.x
                 mode.penY = event.y
@@ -213,27 +214,62 @@ class GameMode(Mode):
         #instructions to open help and pause
         canvas.create_rectangle(10, mode.height - 70, 190, mode.height - 10, fill = "white", outline = "")
         canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help \nPress P to Pause", font = "Arial 20 bold", fill = "black")
-    
+
+    def timeIsUp(mode, canvas):
+        cx, cy = mode.width // 2, mode.height // 2
         if mode.timeEnd:
                 canvas.create_rectangle(cx - 200, cy - 100, cx + 200, cy + 100, fill = "gray", outline = "black")
                 canvas.create_text(cx, cy, text="Time is Up!", font="Arial 50 bold")
 
     def drawColorOptions(mode, canvas):
+        cx, cy = mode.width // 2, mode.height // 2
 
         if mode.eyeshadowSelection == True:
             for i in range(len(mode.eyeshadowColors)):
                 canvas.create_rectangle(mode.width - 150, i * 50, mode.width - 100, (i+1) * 50, fill = mode.eyeshadowColorNames[i])
                 canvas.create_text(mode.width - 125, (i + 0.5) * 50, text = f'{mode.eyeshadowColors[i]}', font = "Arial 15")
+            rightEyeBounds = [(711, 286),(713, 283),(715, 282),(718, 280),(721, 278),(725, 277),(731, 276),(735, 276),(738, 276),
+                            (742, 275),(746, 275),(750, 275),(752, 275),(754, 275),(759, 276),(762, 272),(764, 270),(764, 268),
+                            (763, 266),(760, 263),(755, 262),(750, 262),(744, 262),(736, 263),(728, 265),(721, 268),(716, 270),
+                            (712, 273),(710, 276),(708, 279),(708, 284),(709, 287)]
+            leftEyeBounds = []
+            for (x,y) in rightEyeBounds:
+                newX = (mode.width - 30 - x) + (cx - 90)
+                leftEyeBounds.append((newX,y))
+            for (x,y) in rightEyeBounds:
+                canvas.create_text(x, y, text = '·')
+            for (x,y) in leftEyeBounds:
+                canvas.create_text(x, y, text = '·')
 
         elif mode.blushSelection == True:
             for i in range(len(mode.blushColors)):
                 canvas.create_rectangle(mode.width - 150, 125 + i * 50, mode.width - 100, 125 + (i+1) * 50, fill = mode.blushColorNames[i])
                 canvas.create_text(mode.width - 125, 125 + (i + 0.5) * 50, text = f'{mode.blushColors[i]}', font = "Arial 15")
+            rightBlushBounds = [(715, 321),(721, 313),(731, 310),(742, 310),(754, 313),(760, 320),(762, 333),(754, 344),
+                                (741, 348),(726, 344),(715, 339),(711, 330)]
+            leftBlushBounds = []
+            for (x,y) in rightBlushBounds:
+                newX = (mode.width - 30 - x) + (cx - 90)
+                leftBlushBounds.append((newX,y))
+            for (x,y) in rightBlushBounds:
+                canvas.create_text(x, y, text = '·')
+            for (x,y) in leftBlushBounds:
+                canvas.create_text(x, y, text = '·')
 
         elif mode.lipstickSelection == True:
             for i in range(len(mode.lipstickColors)):
                 canvas.create_rectangle(mode.width - 150, 250 + i * 50, mode.width - 100, 250 + (i+1) * 50, fill = mode.lipstickColorNames[i])
                 canvas.create_text(mode.width - 125, 250 + (i + 0.5) * 50, text = f'{mode.lipstickColors[i]}', font = "Arial 15")
+            rightLipstickBounds = [(690, 355),(694, 354),(698, 353),(701, 354),(706, 355),(711, 358),
+                                (690, 370),(694, 369),(698, 368),(703, 367),(707, 364), (710, 362)]
+            leftLipstickBounds = []
+            for (x,y) in rightLipstickBounds:
+                newX = (mode.width - 30 - x) + (cx - 90)
+                leftLipstickBounds.append((newX,y))
+            for (x,y) in rightLipstickBounds:
+                canvas.create_text(x, y, text = '·')
+            for (x,y) in leftLipstickBounds:
+                canvas.create_text(x, y, text = '·')
 
     def drawing(mode, canvas):
         for (cx, cy, r, color) in mode.drawnDots[:-1]:
@@ -258,4 +294,5 @@ class GameMode(Mode):
             GameMode.drawGameScreen(mode,canvas)
             GameMode.drawColorOptions(mode, canvas)
             GameMode.drawing(mode, canvas)
+            GameMode.timeIsUp(mode, canvas)
         
