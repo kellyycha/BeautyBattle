@@ -3,14 +3,20 @@ from tkinter import *
 import os
 
 class StartMode(Mode):
+    #class attributes to carry over different AIs
     name = ""
+    easy = False
+    medium = False
+    hard = False
+
     def appStarted(mode):
+        mode.cx, mode.cy = mode.width // 2, mode.height // 2
         parentDir = os.path.abspath("..")
         # Background image: https://cdn4.vectorstock.com/i/1000x1000/85/23/beauty-background-with-icons-cosmetics-vector-1998523.jpg 
         img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
         mode.background = mode.loadImage(img_dir)
-        mode.cx, mode.cy = mode.width // 2, mode.height // 2
-
+        
+        #to zoom in the title screen
         mode.time = 0
         mode.size = 0
         mode.textcx = mode.width
@@ -19,9 +25,6 @@ class StartMode(Mode):
 
     def opponentOptions(mode):
         mode.showOptions = False
-        mode.easy = False
-        mode.medium = False
-        mode.hard = False
         mode.challengeButton = False
         #images
         parentDir = os.path.abspath("..")
@@ -37,42 +40,45 @@ class StartMode(Mode):
 
     def mousePressed(mode, event):
         if mode.showOptions:
-            if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480):
+            if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480): #clicks challenge button
                 mode.app.setActiveMode(mode.app.gameMode)
- 
+
+            #clicks Amateur
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
-                mode.easy = True
+                StartMode.easy = True
                 StartMode.name = "Amateur"
-                mode.medium = False
-                mode.hard = False
-                mode.challengeButton = True
-                
-            elif (470 <= event.x <= 530) and (190 <= event.y < 420):
-                mode.easy = False
-                mode.medium = True
-                StartMode.name = "Professional"
-                mode.hard = False
+                StartMode.medium = False
+                StartMode.hard = False
                 mode.challengeButton = True
 
+            #clicks Professional 
+            elif (470 <= event.x <= 530) and (190 <= event.y < 420):
+                StartMode.easy = False
+                StartMode.medium = True
+                StartMode.name = "Professional"
+                StartMode.hard = False
+                mode.challengeButton = True
+
+            #clicks Expert
             elif (660 <= event.x <= 710) and (190 <= event.y < 420):
-                mode.easy = False
-                mode.medium = False
-                mode.hard = True
+                StartMode.easy = False
+                StartMode.medium = False
+                StartMode.hard = True
                 StartMode.name = "Expert"
                 mode.challengeButton = True
 
+            #clicks outside of the three options
             else:
-                mode.easy = False
-                mode.medium = False
-                mode.hard = False
                 mode.challengeButton = False
 
     def timerFired(mode):
+        #increases size of title text
         mode.time += mode.timerDelay
         if mode.textcx > mode.width//2:
             mode.size += 5
             mode.textcx -= 40
 
+        #automatically shows the options screen after 2 seconds
         if mode.showOptions == False and mode.time > 2000:
             mode.showOptions = True
 
@@ -80,12 +86,13 @@ class StartMode(Mode):
         #background
         canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
 
+        #title text
         if mode.showOptions == False:
             text = "  Welcome to the\nKC Beauty Studio"
             font = f"Arial {mode.size} bold"
             canvas.create_text(mode.cx, mode.cy, text = text, fill = 'black', font = font)
+        
         else:
-            #title
             canvas.create_text(mode.cx, 70, text = "Select an Opponent", font = "Arial 50 bold", fill = "black")
             
             #show options
@@ -100,8 +107,3 @@ class StartMode(Mode):
             if mode.challengeButton:
                 canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")
                 canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {StartMode.name}", font = "Arial 30 bold", fill = "black")
-
-            if mode.challengeButton == False:
-                canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")
-                canvas.create_text(mode.cx, mode.height - 40, text = "No Selection Made", font = "Arial 30 bold", fill = "black")
-
