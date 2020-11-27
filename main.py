@@ -1,5 +1,5 @@
 from cmu_112_graphics import *
-from startScreen import StartMode
+from startMode import StartMode
 from helpMode import HelpMode
 from gameMode import GameMode
 

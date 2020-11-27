@@ -2,9 +2,8 @@ from cmu_112_graphics import *
 from tkinter import *
 import os
 
-name = "NOT CORRECT"
-
 class StartMode(Mode):
+    name = ""
     def appStarted(mode):
         parentDir = os.path.abspath("..")
         # Background image: https://cdn4.vectorstock.com/i/1000x1000/85/23/beauty-background-with-icons-cosmetics-vector-1998523.jpg 
@@ -37,15 +36,13 @@ class StartMode(Mode):
         mode.expert = mode.scaleImage(mode.loadImage(img_dir), 1/4)
 
     def mousePressed(mode, event):
-        global name
         if mode.showOptions:
             if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480):
                 mode.app.setActiveMode(mode.app.gameMode)
-                #GameMode.appStarted(mode) <-- restart when called
  
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
                 mode.easy = True
-                name = "Amateur"
+                StartMode.name = "Amateur"
                 mode.medium = False
                 mode.hard = False
                 mode.challengeButton = True
@@ -53,7 +50,7 @@ class StartMode(Mode):
             elif (470 <= event.x <= 530) and (190 <= event.y < 420):
                 mode.easy = False
                 mode.medium = True
-                name = "Professional"
+                StartMode.name = "Professional"
                 mode.hard = False
                 mode.challengeButton = True
 
@@ -61,7 +58,7 @@ class StartMode(Mode):
                 mode.easy = False
                 mode.medium = False
                 mode.hard = True
-                name = "Expert"
+                StartMode.name = "Expert"
                 mode.challengeButton = True
 
             else:
@@ -102,7 +99,7 @@ class StartMode(Mode):
             #show challenge button after selection
             if mode.challengeButton:
                 canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")
-                canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {name}", font = "Arial 30 bold", fill = "black")
+                canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {StartMode.name}", font = "Arial 30 bold", fill = "black")
 
             if mode.challengeButton == False:
                 canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")

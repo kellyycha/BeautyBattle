@@ -2,27 +2,23 @@ from cmu_112_graphics import *
 from tkinter import *
 import random
 import os
-from startScreen import *
+from startMode import *
 
 class GameMode(Mode):
     def appStarted(mode):
+        mode.cx, mode.cy = mode.width // 2, mode.height // 2
+
         parentDir = os.path.abspath("..")
         img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
         mode.background = mode.loadImage(img_dir)
-        mode.cx, mode.cy = mode.width // 2, mode.height // 2
-        
         mode.customerScreen = True
         mode.gameScreen = False
         mode.scoringScreen = False
 
-        mode.timeLeft = 61
+        mode.timeLeft = 31
         mode.timerCount = 0
         mode.timeEnd = False
         mode.pause = False
-
-        mode.customer()
-        mode.colorPicker()
-        mode.productImages()
 
         mode.eyeshadowSelection = False
         mode.blushSelection = False
@@ -37,7 +33,11 @@ class GameMode(Mode):
         mode.yourScore = 100
         mode.opponentScore = 100
 
-    def customer(mode):
+        #mode.customer()
+        #mode.colorPicker()
+        #mode.productImages()
+
+    #def customer(mode):
         parentDir = os.path.abspath("..")
         # Customers generated with: https://www.cartoonify.de/#cartoonify
         customers = ["customer1.png", "customer2.png", "customer3.png","customer4.png","customer5.png","customer6.png"]
@@ -45,7 +45,7 @@ class GameMode(Mode):
         img_dir = os.path.join(parentDir, f"termProject/images/customers/{customer}")
         mode.customer = mode.scaleImage(mode.loadImage(img_dir), 2/3)
     
-    def productImages(mode):
+    #def productImages(mode):
         parentDir = os.path.abspath("..")
         # Eyeshadow image: http://clipart-library.com/clipart/1401830.htm 
         img_dir = os.path.join(parentDir, "termProject/images/eyeshadow.png")
@@ -60,7 +60,7 @@ class GameMode(Mode):
         img_dir = os.path.join(parentDir, "termProject/images/erase.png")
         mode.erase = mode.scaleImage(mode.loadImage(img_dir), 1/5)
 
-    def colorPicker(mode):
+    #def colorPicker(mode):
         mode.eyeshadowColors = ["pink", "orange", "gold", "green", "blue", "purple"]
         mode.eyeshadowColorNames = ["hot pink", "dark orange", "gold", "yellow green", "deep sky blue", "medium orchid"]
         mode.eyeshadowColor = random.choice(mode.eyeshadowColors)
@@ -141,7 +141,11 @@ class GameMode(Mode):
                         if (850 <= event.x <= 900) and (250 + i*50 <= event.y < 250 + (i+1)*50):
                             mode.colorShow = False
                             mode.selectedColor = mode.lipstickColorNames[i]
-
+        
+        if mode.scoringScreen == True and (320 <= event.x <= 680) and (440 <= event.y < 480):
+            mode.app.startMode.appStarted()
+            mode.app.gameMode.appStarted()
+            mode.app.setActiveMode(mode.app.startMode)
 
     def mouseDragged(mode, event):
         if mode.pause == False:
@@ -162,9 +166,7 @@ class GameMode(Mode):
 
     def keyPressed(mode, event):
         if event.key == "h":
-            mode.pause = True
             mode.app.setActiveMode(mode.app.helpMode)
-            mode.pause = False
 
         if event.key == "p":
             mode.pause = not mode.pause
@@ -228,10 +230,10 @@ class GameMode(Mode):
         canvas.create_rectangle(10, mode.height - 70, 190, mode.height - 10, fill = "white", outline = "")
         canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Press H for Help \nPress P to Pause", font = "Arial 20 bold", fill = "black")
 
-    def timeIsUp(mode, canvas):
-        if mode.timeEnd:
-                canvas.create_rectangle(mode.cx - 200, mode.cy - 100, mode.cx + 200, mode.cy + 100, fill = "gray", outline = "black")
-                canvas.create_text(mode.cx, mode.cy, text="Time is Up!", font="Arial 50 bold")
+    #def timeIsUp(mode, canvas):
+    #    if mode.timeEnd:
+    #        canvas.create_rectangle(mode.cx - 200, mode.cy - 100, mode.cx + 200, mode.cy + 100, fill = "gray", outline = "black")
+    #        canvas.create_text(mode.cx, mode.cy, text="Time is Up!", font="Arial 50 bold")
 
     def drawColorOptions(mode, canvas):
         if mode.eyeshadowSelection == True:
@@ -292,7 +294,6 @@ class GameMode(Mode):
             canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = color)
 
     def drawScoringScreen(mode, canvas):
-        global name
         #take screenshot of finished pictures to compare and score
 
         #labels
@@ -304,10 +305,12 @@ class GameMode(Mode):
         if mode.yourScore > mode.opponentScore:
             canvas.create_text(mode.cx, mode.cy, text='You Win! Congrats on getting hired!', font="Arial 40 bold")
         elif mode.yourScore < mode.opponentScore:
-            canvas.create_text(mode.cx, mode.cy, text=f'Better luck next time, {name} beat you.', font="Arial 40 bold")
-
+            canvas.create_text(mode.cx, mode.cy, text=f'Better luck next time, {StartMode.name} beat you.', font="Arial 40 bold")
         elif mode.yourScore == mode.opponentScore:
-            canvas.create_text(mode.cx, mode.cy, text=f"It's a tie... try to beat {name} next time.", font="Arial 40 bold")
+            canvas.create_text(mode.cx, mode.cy, text=f"It's a tie... try to beat {StartMode.name} next time.", font="Arial 40 bold")
+        
+        canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")
+        canvas.create_text(mode.cx, mode.height - 40, text = "Try Again", font = "Arial 30 bold", fill = "black")
 
     def redrawAll(mode, canvas):
         #background
@@ -318,6 +321,6 @@ class GameMode(Mode):
             GameMode.drawGameScreen(mode,canvas)
             GameMode.drawColorOptions(mode, canvas)
             GameMode.drawing(mode, canvas)
-            GameMode.timeIsUp(mode, canvas)
+            #GameMode.timeIsUp(mode, canvas)
         elif mode.scoringScreen:
             GameMode.drawScoringScreen(mode, canvas)

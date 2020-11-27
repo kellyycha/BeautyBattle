@@ -20,5 +20,5 @@ class HelpMode(Mode):
         if event.key == "h":
             mode.app.setActiveMode(mode.app.gameMode)
         if event.key == "s":
+            mode.app.gameMode.appStarted()
             mode.app.setActiveMode(mode.app.startMode)
-            #want to make it reset
