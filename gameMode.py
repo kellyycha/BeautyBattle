@@ -1,22 +1,26 @@
 from cmu_112_graphics import *
 from tkinter import *
 import random
-import os
 from startMode import *
+from amateurMode import *
 
 class GameMode(Mode):
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
-        parentDir = os.path.abspath("..")
         #background
-        img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
-        mode.background = mode.loadImage(img_dir)
+        mode.background = mode.loadImage("images/background.jpg")
+
+        if StartMode.easy == True:
+            mode.app.setActiveMode(mode.app.amateurMode)
+        elif StartMode.medium == True:
+            pass
+        elif StartMode.hard == True:
+            pass
 
         # Customers generated with: https://www.cartoonify.de/#cartoonify
         customers = ["customer1.png", "customer2.png", "customer3.png","customer4.png","customer5.png","customer6.png"]
         customer = random.choice(customers)
-        img_dir = os.path.join(parentDir, f"termProject/images/customers/{customer}")
-        mode.customer = mode.scaleImage(mode.loadImage(img_dir), 2/3)
+        mode.customer = mode.scaleImage(mode.loadImage(f"images/customers/{customer}"), 2/3)
 
         #three different modes in the game
         mode.customerScreen = True
@@ -35,19 +39,14 @@ class GameMode(Mode):
         mode.lipstickSelection = False
         mode.eraserSelection = False
 
-        #product images
         # Eyeshadow image: http://clipart-library.com/clipart/1401830.htm 
-        img_dir = os.path.join(parentDir, "termProject/images/eyeshadow.png")
-        mode.eyeshadow = mode.scaleImage(mode.loadImage(img_dir), 1/6)
+        mode.eyeshadow = mode.scaleImage(mode.loadImage("images/eyeshadow.png"), 1/6)
         # Blush image: https://webstockreview.net/pict/getfirst 
-        img_dir = os.path.join(parentDir, "termProject/images/blush.png")
-        mode.blush = mode.scaleImage(mode.loadImage(img_dir), 1/5)
+        mode.blush = mode.scaleImage(mode.loadImage("images/blush.png"), 1/5)
         # Lipstick image: https://pngriver.com/pink-lipstick-png-transparent-clipart-image-2-5461/women-lipstick-png-transparent-images-transparent-backgrounds-pink-lipstick-png-12/ 
-        img_dir = os.path.join(parentDir, "termProject/images/lipstick.png")
-        mode.lipstick = mode.scaleImage(mode.loadImage(img_dir), 1/9)
+        mode.lipstick = mode.scaleImage(mode.loadImage("images/lipstick.png"), 1/9)
         # Eraser image: http://clipart-library.com/clipart/15308.htm 
-        img_dir = os.path.join(parentDir, "termProject/images/erase.png")
-        mode.erase = mode.scaleImage(mode.loadImage(img_dir), 1/5)
+        mode.erase = mode.scaleImage(mode.loadImage("images/erase.png"), 1/5)
 
         #drawing
         mode.penX = mode.penY = mode.penR = 0
@@ -70,7 +69,7 @@ class GameMode(Mode):
         mode.opponentScore = 0
     
     def mousePressed(mode, event):
-        print(f'{(event.x,event.y)},')
+        #print(f'{(event.x,event.y)},')
         if mode.pause == False:
             if mode.customerScreen:
                 #start the game
@@ -203,7 +202,7 @@ class GameMode(Mode):
         canvas.create_text(mode.cx - 30, 20, text=f'{mode.timeLeft}s remaining', font="Arial 20 bold")
 
         #customer and order
-        canvas.create_text(mode.cx // 2 - 30, 70, text='Opponent', font="Arial 30 bold")
+        canvas.create_text(mode.cx // 2 - 30, 70, text=StartMode.name, font="Arial 30 bold")
         canvas.create_image(mode.cx // 2 - 30, mode.cy + 50, image = ImageTk.PhotoImage(mode.customer))
         canvas.create_text(mode.cx + mode.cx // 2 - 60, 70, text='You', font="Arial 30 bold")
         canvas.create_image(mode.cx + mode.cx // 2 - 60, mode.cy + 50, image = ImageTk.PhotoImage(mode.customer))
@@ -230,7 +229,7 @@ class GameMode(Mode):
 
     def timeIsUp(mode, canvas):
         if mode.timeEnd:
-            canvas.create_rectangle(mode.cx - 200, mode.cy - 100, mode.cx + 200, mode.cy + 100, fill = "gray", outline = "black")
+            canvas.create_rectangle(mode.cx - 200, mode.cy - 100, mode.cx + 200, mode.cy + 100, fill = "light gray", outline = "")
             canvas.create_text(mode.cx, mode.cy, text="Time is Up!", font="Arial 50 bold")
 
     def drawColorOptions(mode, canvas):
@@ -301,10 +300,10 @@ class GameMode(Mode):
 
     def drawScoringScreen(mode, canvas):
         #labels
-        canvas.create_text(mode.cx // 2, 70, text='Opponent', font="Arial 30 bold")
-        canvas.create_text(mode.cx // 2, 150, text=f'Score: {mode.opponentScore}', font="Arial 30 ")
+        canvas.create_text(mode.cx // 2, 70, text=StartMode.name, font="Arial 30 bold")
+        canvas.create_text(mode.cx // 2, 150, text=f'Score: {mode.opponentScore}%', font="Arial 30 ")
         canvas.create_text(mode.cx + mode.cx // 2, 70, text='You', font="Arial 30 bold")
-        canvas.create_text(mode.cx + mode.cx // 2, 150, text=f'Score: {mode.yourScore}', font="Arial 30 ")
+        canvas.create_text(mode.cx + mode.cx // 2, 150, text=f'Score: {mode.yourScore}%', font="Arial 30 ")
         canvas.create_rectangle(0, mode.cy - 50, mode.width, mode.cy + 50, fill = 'white', outline = '')
 
         if mode.yourScore > mode.opponentScore:

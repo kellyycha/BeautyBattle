@@ -1,6 +1,5 @@
 from cmu_112_graphics import *
 from tkinter import *
-import os
 
 class StartMode(Mode):
     #class attributes to carry over different AIs
@@ -11,10 +10,8 @@ class StartMode(Mode):
 
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
-        parentDir = os.path.abspath("..")
         # Background image: https://cdn4.vectorstock.com/i/1000x1000/85/23/beauty-background-with-icons-cosmetics-vector-1998523.jpg 
-        img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
-        mode.background = mode.loadImage(img_dir)
+        mode.background = mode.loadImage("images/background.jpg")
         
         #to zoom in the title screen
         mode.time = 0
@@ -26,17 +23,12 @@ class StartMode(Mode):
     def opponentOptions(mode):
         mode.showOptions = False
         mode.challengeButton = False
-        #images
-        parentDir = os.path.abspath("..")
         # Amateur image: https://graphicmama.com/cartoon-character/cute-office-girl-cartoon-vector-character 
-        img_dir = os.path.join(parentDir, "termProject/images/amateur.png")
-        mode.amateur = mode.scaleImage(mode.loadImage(img_dir), 1/4)
+        mode.amateur = mode.scaleImage(mode.loadImage("images/amateur.png"), 1/4)
         # Professional image: https://graphicmama.com/cartoon-character/pretty-girl-with-long-hair-cartoon-vector-character 
-        img_dir = os.path.join(parentDir, "termProject/images/professional.png")
-        mode.professional = mode.scaleImage(mode.loadImage(img_dir), 1/4)
+        mode.professional = mode.scaleImage(mode.loadImage("images/professional.png"), 1/4)
         # Expert image: https://graphicmama.com/cartoon-character/cartoon-elegant-woman-vector-character 
-        img_dir = os.path.join(parentDir, "termProject/images/expert.png")
-        mode.expert = mode.scaleImage(mode.loadImage(img_dir), 1/4)
+        mode.expert = mode.scaleImage(mode.loadImage("images/expert.png"), 1/4)
 
     def mousePressed(mode, event):
         if mode.showOptions:

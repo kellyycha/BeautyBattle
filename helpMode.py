@@ -3,9 +3,7 @@ from cmu_112_graphics import *
 class HelpMode(Mode):
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
-        parentDir = os.path.abspath("..")
-        img_dir = os.path.join(parentDir, "termProject/images/background.jpg")
-        mode.background = mode.loadImage(img_dir)
+        mode.background = mode.loadImage("images/background.jpg")
 
     def redrawAll(mode, canvas):
         canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
