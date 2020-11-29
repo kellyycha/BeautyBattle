@@ -2,20 +2,13 @@ from cmu_112_graphics import *
 from tkinter import *
 import random
 from startMode import *
-from amateurMode import *
 
 class GameMode(Mode):
+
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
         #background
         mode.background = mode.loadImage("images/background.jpg")
-
-        if StartMode.easy == True:
-            mode.app.setActiveMode(mode.app.amateurMode)
-        elif StartMode.medium == True:
-            pass
-        elif StartMode.hard == True:
-            pass
 
         # Customers generated with: https://www.cartoonify.de/#cartoonify
         customers = ["customer1.png", "customer2.png", "customer3.png","customer4.png","customer5.png","customer6.png"]
@@ -52,22 +45,68 @@ class GameMode(Mode):
         mode.penX = mode.penY = mode.penR = 0
         mode.selectedColor = '' 
         mode.colorShow = False
-        mode.drawnDots = []
+        mode.drawnEyeshadowDots = []
+        mode.drawnBlushDots = []
+        mode.drawnLipstickDots = []
+        mode.drawnTotalDots = []
 
         #color picker
         mode.eyeshadowColors = ["pink", "orange", "gold", "green", "blue", "purple"]
         mode.eyeshadowColorNames = ["hot pink", "dark orange", "gold", "yellow green", "deep sky blue", "medium orchid"]
         mode.eyeshadowColor = random.choice(mode.eyeshadowColors)
+
+        eyeshadowIndex = mode.eyeshadowColors.index(mode.eyeshadowColor)
+        mode.correctEyeshadowColor = mode.eyeshadowColorNames[eyeshadowIndex]
+
         mode.blushColors = ["pink", "red", "peach", "orange"]
         mode.blushColorNames = ["hot pink", "red", "salmon", "dark orange"]
         mode.blushColor = random.choice(mode.blushColors)
+
+        blushIndex = mode.blushColors.index(mode.blushColor)
+        mode.correctBlushColor = mode.blushColorNames[blushIndex]
+
         mode.lipstickColors = ["pink", "red", "nude", "purple"]
         mode.lipstickColorNames = ["hot pink", "red", "LightSalmon2", "medium orchid"]
         mode.lipstickColor = random.choice(mode.lipstickColors)   
 
+        lipstickIndex = mode.lipstickColors.index(mode.lipstickColor)
+        mode.correctLipstickColor = mode.lipstickColorNames[lipstickIndex]
+
         mode.yourScore = 0
-        mode.opponentScore = 0
-    
+        mode.opponentScore = 70
+
+        mode.opponentDrawnEyeshadowDots = []
+        mode.AmateurSolutionEyeshadowDots = [(242, 281), (248, 277), (250, 275), (253, 273), (255, 272), (261, 271), (263, 270), 
+                                            (271, 268), (273, 268), (279, 268), (283, 268), (287, 268), (289, 268), (293, 268), 
+                                            (295, 269), (297, 269), (295, 269), (291, 268), (288, 268), (285, 267), (282, 267),
+                                            (276, 267), (272, 268), (267, 268), (265, 268), (259, 270), (257, 270), (253, 272),
+                                            (251, 274), (248, 275), (246, 276), (245, 278), (244, 278), (204, 285), (204, 283), 
+                                            (202, 281), (201, 281), (197, 279), (196, 278), (192, 276), (191, 275), (187, 274), 
+                                            (186, 274), (184, 273), (182, 272), (178, 270), (177, 270), (174, 268), (172, 268), 
+                                            (169, 267), (166, 266), (161, 265), (158, 265), (155, 264), (154, 264), (154, 265), 
+                                            (153, 266), (151, 268), (151, 269), (152, 269), (154, 270), (160, 270), (163, 269),
+                                            (170, 268), (174, 268), (180, 269), (182, 269), (186, 270), (189, 272), (197, 275), 
+                                            (198, 276), (202, 279), (202, 280)]
+        mode.opponentDrawnBlushDots = []
+        mode.AmateurSolutionBlushDots = [(279, 323), (277, 319), (273, 317), (266, 317), (263, 318), (258, 321), (257, 322), (256, 326), 
+                                        (256, 329), (257, 332), (258, 335), (260, 336), (261, 337), (265, 338), (270, 339), (274, 339), 
+                                        (275, 339), (279, 337), (280, 336), (284, 332), (285, 330), (287, 326), (287, 324), (284, 323), 
+                                        (282, 322), (277, 320), (276, 319), (274, 319), (272, 319), (268, 322), (267, 323), (267, 327), 
+                                        (163, 316), (162, 317), (158, 322), (157, 324), (157, 329), (157, 332), (158, 334), (159, 335), 
+                                        (162, 337), (165, 338), (169, 339), (173, 339), (178, 339), (181, 339), (185, 339), (187, 339), 
+                                        (193, 337), (195, 335), (197, 333), (198, 331), (198, 327), (197, 326), (195, 325), (193, 324), 
+                                        (190, 322), (188, 321), (185, 320), (183, 319), (180, 317), (178, 317), (173, 315), (172, 315), 
+                                        (168, 316), (167, 318), (167, 320), (173, 322), (176, 323), (177, 323)]
+        mode.opponentDrawnLipstickDots = []
+        mode.AmateurSolutionLipstickDots = [(204, 362), (206, 361), (210, 359), (213, 359), (216, 359), (218, 359), (222, 359), 
+                                            (225, 359), (227, 359), (230, 360), (237, 361), (236, 362), (232, 363), (229, 364), 
+                                            (226, 365), (224, 365), (221, 365), (219, 365), (215, 365), (213, 365), (209, 364), 
+                                            (208, 364), (206, 363), (203, 362), (202, 361), (201, 360), (202, 360), (207, 358), 
+                                            (209, 358), (210, 356), (212, 356), (213, 357), (217, 358), (219, 358), (221, 357), 
+                                            (223, 357), (224, 356), (226, 356), (229, 356), (231, 357), (232, 357), (238, 360), 
+                                            (236, 360), (235, 361), (231, 364), (230, 365), (225, 367), (224, 367), (221, 367), 
+                                            (219, 367), (215, 366), (214, 366), (213, 366), (211, 364), (211, 363), (213, 362)]
+                                            
     def mousePressed(mode, event):
         #print(f'{(event.x,event.y)},')
         if mode.pause == False:
@@ -77,8 +116,8 @@ class GameMode(Mode):
                     mode.customerScreen = False
                     mode.gameScreen = True
                     mode.scoringScreen = False
-            
-            if mode.gameScreen: 
+ 
+            if mode.gameScreen:
                 #submit button
                 if (420 <= event.x <= 520) and (310 <= event.y < 353):
                     mode.scoringScreen = True
@@ -149,15 +188,29 @@ class GameMode(Mode):
                     mode.colorShow = True
                     mode.penX = event.x
                     mode.penY = event.y
-                    mode.drawnDots.append((event.x, event.y, mode.penR, mode.selectedColor)) #coloring 
+                    if mode.selectedColor != '':
+                        mode.drawnTotalDots.append((event.x, event.y, mode.penR, mode.selectedColor))
+                        if mode.eyeshadowSelection:
+                            mode.drawnEyeshadowDots.append((event.x, event.y, mode.penR, mode.selectedColor)) 
+                        if mode.blushSelection:
+                            mode.drawnBlushDots.append((event.x, event.y, mode.penR, mode.selectedColor))
+                        if mode.lipstickSelection:
+                            mode.drawnLipstickDots.append((event.x, event.y, mode.penR, mode.selectedColor))
                 if mode.eraserSelection:
                     GameMode.eraserIntersect(mode) #erasing
 
     def eraserIntersect(mode):
-        for (cx, cy, r, color) in mode.drawnDots:
+        for (cx, cy, r, color) in mode.drawnTotalDots:
             distanceFormula = ((mode.penX - cx)**2 + (mode.penY - cy)**2)**0.5
             if (distanceFormula <= mode.penR + r):
-                mode.drawnDots.remove((cx, cy, r, color))
+                mode.drawnTotalDots.remove((cx, cy, r, color))
+                if (cx, cy, r, color) in mode.drawnEyeshadowDots:
+                    mode.drawnEyeshadowDots.remove((cx, cy, r, color))
+                elif (cx, cy, r, color) in mode.drawnBlushDots:
+                    mode.drawnBlushDots.remove((cx, cy, r, color))
+                elif (cx, cy, r, color) in mode.drawnLipstickDots:
+                    mode.drawnLipstickDots.remove((cx, cy, r, color))
+
 
     def keyPressed(mode, event):
         if event.key == "h":    #help
@@ -165,6 +218,12 @@ class GameMode(Mode):
 
         if event.key == "p":    #pause
             mode.pause = not mode.pause
+        
+        if event.key == 'q':
+            print(f'eyeshadow:{mode.drawnEyeshadowDots}')
+            print(f'blush:{mode.drawnBlushDots}')
+            print(f'lipstick:{mode.drawnLipstickDots}')
+            print(f'total:{mode.drawnTotalDots}')
 
     def timerFired(mode):
         if mode.pause == False:
@@ -175,6 +234,14 @@ class GameMode(Mode):
                         mode.timeLeft -= 1
                     else:
                         mode.timeEnd = True
+                if StartMode.easy:
+                    if mode.timerCount < len(mode.AmateurSolutionEyeshadowDots):
+                        mode.opponentDrawnEyeshadowDots.append(mode.AmateurSolutionEyeshadowDots[mode.timerCount])
+                    if 20 + len(mode.AmateurSolutionEyeshadowDots) <= mode.timerCount < 20 + len(mode.AmateurSolutionEyeshadowDots) + len(mode.AmateurSolutionBlushDots):
+                        mode.opponentDrawnBlushDots.append(mode.AmateurSolutionBlushDots[mode.timerCount - 20 -len(mode.AmateurSolutionEyeshadowDots)])
+                    if 40 + len(mode.AmateurSolutionEyeshadowDots) + len(mode.AmateurSolutionBlushDots) <= mode.timerCount <40 + len(mode.AmateurSolutionLipstickDots) + len(mode.AmateurSolutionEyeshadowDots) + len(mode.AmateurSolutionBlushDots):
+                        mode.opponentDrawnLipstickDots.append(mode.AmateurSolutionLipstickDots[mode.timerCount - 40 -(len(mode.AmateurSolutionEyeshadowDots) + len(mode.AmateurSolutionBlushDots))])
+
                 mode.timerCount += 1
 
         #automatically shows the scoring screen 2 seconds after time ends
@@ -288,7 +355,7 @@ class GameMode(Mode):
                 canvas.create_text(x, y, text = '·')
 
     def drawing(mode, canvas):
-        for (cx, cy, r, color) in mode.drawnDots[:-1]:
+        for (cx, cy, r, color) in mode.drawnTotalDots[:-1]:
             canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = color, outline = '')
         if mode.colorShow == True:
             cx = mode.penX
@@ -317,6 +384,17 @@ class GameMode(Mode):
         canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")
         canvas.create_text(mode.cx, mode.height - 40, text = "Try Again", font = "Arial 30 bold", fill = "black")
 
+    def opponentDrawing(mode, canvas):
+        for (cx, cy) in mode.opponentDrawnEyeshadowDots:
+            r = 5
+            canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = mode.correctEyeshadowColor, outline = '')
+        for (cx, cy) in mode.opponentDrawnBlushDots:
+            r = 10
+            canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = mode.correctBlushColor, outline = '')
+        for (cx, cy) in mode.opponentDrawnLipstickDots:
+            r = 5
+            canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill = mode.correctLipstickColor, outline = '')
+
     def redrawAll(mode, canvas):
         #background
         canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
@@ -329,6 +407,7 @@ class GameMode(Mode):
             GameMode.drawColorOptions(mode, canvas)
             GameMode.drawing(mode, canvas)
             GameMode.timeIsUp(mode, canvas)
+            GameMode.opponentDrawing(mode, canvas)
 
         elif mode.scoringScreen:
             GameMode.drawScoringScreen(mode, canvas)
