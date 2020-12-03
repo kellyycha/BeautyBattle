@@ -136,8 +136,8 @@ class GameMode(Mode):
                     mode.scoringScreen = True
                     mode.gameScreen = False
                     mode.customerScreen = False
-                    GameMode.calculateOpponentScore(mode)
                     GameMode.calculateYourScore(mode)
+                    GameMode.calculateOpponentScore(mode)
                 #eyeshadow selected
                 elif (mode.width - 100 <= event.x <= mode.width) and (0 <= event.y < 125):
                     mode.eyeshadowSelection = True
@@ -250,7 +250,6 @@ class GameMode(Mode):
             mode.drawingEyeshadowL = False
             mode.drawingEyeshadowR = False
 
-
         if event.key == "h":    #help
             mode.app.setActiveMode(mode.app.helpMode)
 
@@ -267,25 +266,47 @@ class GameMode(Mode):
         if mode.pause == False:
             if mode.gameScreen:
                 #countdown every second
-                if mode.timerCount % 10 == 0:
-                    if mode.timeLeft > 0:
-                        mode.timeLeft -= 1
-                    else:
-                        mode.timeEnd = True
+                if mode.timeLeft > 0.1:
+                    mode.timeLeft -= 0.1
+                else:
+                    mode.timeLeft = 0
+                    mode.timeEnd = True
                         
                 if StartMode.easy:
                     GameMode.easyAI(mode)
                 
+                elif StartMode.medium:
+                    GameMode.mediumAI(mode)
+                
+                elif StartMode.hard:
+                    GameMode.hardAI(mode)
+                
                 mode.timerCount += 1
 
         #automatically shows the scoring screen 2 seconds after time ends
-        if mode.scoringScreen == False and mode.timerCount > 63*10:
-            GameMode.calculateOpponentScore(mode)
+        if mode.scoringScreen == False and mode.timerCount > 63*10: 
             GameMode.calculateYourScore(mode)
+            GameMode.calculateOpponentScore(mode)
             mode.scoringScreen = True
             mode.gameScreen = False
+        
+    def distance(mode, x1, y1, x2, y2):
+        return ((x1- x2)**2 + (y1-y2)**2)**0.5 + mode.opponentR
 
     def easyAI(mode):
+        #start other eye 25 seconds left
+        if mode.timeLeft <= 25 and mode.filledEyeshadowR == False and mode.drawingEyeshadowL == True:            
+            mode.filledEyeshadowL = True
+            mode.drawingEyeshadowL = False
+            mode.drawingEyeshadowR = True
+            GameMode.moveEasyAI(mode)
+        #start lips if 15 seconds left
+        if mode.timeLeft <= 15 and mode.filledLipstick == False and mode.drawingEyeshadowR == True:            
+            mode.filledEyeshadowR = True
+            mode.drawingEyeshadowR = False
+            mode.drawingLipstick = True
+            GameMode.moveEasyAI(mode)
+        
         #blush
         if mode.filledBlushL == False:
             mode.drawingBlushL = True
@@ -308,12 +329,10 @@ class GameMode(Mode):
             mode.drawingEyeshadowR = False
             mode.drawingLipstick = True
             GameMode.moveEasyAI(mode)
-        elif mode.filledLipstick == True:
+        
+        #time is up
+        if mode.timeLeft == 0:
             mode.drawingLipstick = False
-
-    
-    def distance(mode, x1, y1, x2, y2):
-        return ((x1- x2)**2 + (y1-y2)**2)**0.5 + mode.opponentR
 
     def moveEasyAI(mode):
         #blush
@@ -423,14 +442,6 @@ class GameMode(Mode):
                 mode.opponentPenX = 220
                 mode.opponentPenY = 365
             mode.drawnLipstick.append((mode.opponentPenX,mode.opponentPenY))
-
-            xValues = []
-            for (x,y) in mode.drawnLipstick:
-                xValues.append(x)
-            minX = min(xValues)
-            maxX = max(xValues)
-            if maxX-minX >= 38:
-                mode.filledLipstick = True
             
             if GameMode.distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) >= 13 and \
                 GameMode.distance(mode, mode.centerx3, mode.centery3, mode.opponentPenX, mode.opponentPenY) <= 13 and \
@@ -449,7 +460,64 @@ class GameMode(Mode):
                 mode.opponentPenY -= mode.dy
                 mode.dx = random.choice(mode.directions)
                 mode.dy = random.choice(mode.directions)
+        
+    def mediumAI(mode):
+        pass
     
+    def moveMediumAI(mode):
+        pass
+
+    def hardAI(mode):
+        #blush
+        if mode.filledBlushL == False:
+            mode.drawingBlushL = True
+            GameMode.moveHardAI(mode)
+        elif mode.filledBlushL == True and mode.filledBlushR == False:
+            mode.drawingBlushL = False
+            mode.drawingBlushR = True
+            GameMode.moveHardAI(mode)
+        elif mode.filledBlushR == True:
+            mode.drawingBlushR = False
+    
+    def moveHardAI(mode):
+        if mode.drawingBlushL:
+            mode.centerx = 170
+            mode.centery = 330
+            if mode.drawnBlushL == []:
+                mode.opponentPenX = 160
+                mode.opponentPenY = 330
+            mode.drawnBlushL.append((mode.opponentPenX,mode.opponentPenY))
+
+            if len(mode.drawnBlushL) >= 77:
+                mode.filledBlushL = True
+
+            if GameMode.distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 23:
+                mode.drawnBlushL.pop()
+                
+        elif mode.drawingBlushR:
+            mode.centerx = 265
+            if mode.drawnBlushR == []:
+                mode.opponentPenX = 255
+                mode.opponentPenY = 330
+            mode.drawnBlushR.append((mode.opponentPenX,mode.opponentPenY))
+     
+            if len(mode.drawnBlushL) >= 77:
+                mode.filledBlushL = True
+
+            if GameMode.distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 23:
+                mode.drawnBlushR.pop()
+
+        if mode.drawingBlushL or mode.drawingBlushR:
+            if GameMode.distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 20 and mode.opponentPenY >= 330:
+                mode.opponentPenY += 1
+            elif GameMode.distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 20 and mode.opponentPenY < 330:
+                mode.opponentPenY -= 1
+            elif GameMode.distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) >= 20 and mode.opponentPenY >= 330:
+                mode.opponentPenX += 1
+                mode.opponentPenY -= 1
+            elif GameMode.distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) >= 20 and mode.opponentPenY < 330:
+                mode.opponentPenX -= 1
+
     def calculateOpponentScore(mode):
         blushLXValuesO = []
         blushLYValuesO = []
@@ -461,6 +529,7 @@ class GameMode(Mode):
             blushLMaxXO = max(blushLXValuesO)
             blushLMinYO = min(blushLYValuesO)
             blushLMaxYO = max(blushLYValuesO)
+            print(f'len L blush {len(blushLXValuesO)}')
         
             if blushLMaxXO-blushLMinXO >= 22 and blushLMaxYO-blushLMinYO >= 22: 
                 mode.opponentBlushLScore = 100
@@ -480,6 +549,7 @@ class GameMode(Mode):
             blushRMaxXO = max(blushRXValuesO)
             blushRMinYO = min(blushRYValuesO)
             blushRMaxYO = max(blushRYValuesO)
+            print(f'len R blush {len(blushRXValuesO)}')
 
             if blushRMaxXO-blushRMinXO >= 22 and blushRMaxYO-blushRMinYO >= 22: 
                 mode.opponentBlushRScore = 100
@@ -500,10 +570,14 @@ class GameMode(Mode):
             eyeshadowLMinYO = min(eyeshadowLYValuesO)
             eyeshadowLMaxYO = max(eyeshadowLYValuesO)
             print(eyeshadowLMinYO, eyeshadowLMaxYO)
+            print(f'len L eye {len(eyeshadowLXValuesO)}')
 
             if (eyeshadowLMaxXO-eyeshadowLMinXO >= 45 and eyeshadowLMaxYO-eyeshadowLMinYO >= 15 and
-                eyeshadowLMaxXO-eyeshadowLMinXO < 48 and eyeshadowLMaxYO-eyeshadowLMinYO < 17): 
+                eyeshadowLMaxXO-eyeshadowLMinXO < 48 and eyeshadowLMaxYO-eyeshadowLMinYO < 17 and
+                len(eyeshadowLXValuesO) > 200): 
                 mode.opponentEyeshadowLScore = 100
+            if len(eyeshadowLXValuesO) <= 200:
+                mode.opponentEyeshadowLScore -= 10
             if eyeshadowLMaxXO-eyeshadowLMinXO >= 48: 
                 mode.opponentEyeshadowLScore -= ((eyeshadowLMaxXO-eyeshadowLMinXO) - 48)
             if eyeshadowLMaxYO-eyeshadowLMinYO >= 17:
@@ -527,10 +601,14 @@ class GameMode(Mode):
             eyeshadowRMinYO = min(eyeshadowRYValuesO)
             eyeshadowRMaxYO = max(eyeshadowRYValuesO)
             print(eyeshadowRMinYO, eyeshadowRMaxYO)
+            print(f'len R eye {len(eyeshadowRXValuesO)}')
 
             if (eyeshadowRMaxXO-eyeshadowRMinXO >= 45 and eyeshadowRMaxYO-eyeshadowRMinYO >= 15 and
-                eyeshadowRMaxXO-eyeshadowRMinXO < 48 and eyeshadowRMaxYO-eyeshadowRMinYO < 17): 
+                eyeshadowRMaxXO-eyeshadowRMinXO < 48 and eyeshadowRMaxYO-eyeshadowRMinYO < 17 and
+                len(eyeshadowLXValuesO) > 200): 
                 mode.opponentEyeshadowRScore = 100
+            if len(eyeshadowRXValuesO) <= 200:
+                mode.opponentEyeshadowRScore -= 10
             if eyeshadowRMaxXO-eyeshadowRMinXO >= 48: 
                 mode.opponentEyeshadowRScore -= ((eyeshadowRMaxXO-eyeshadowRMinXO) - 48)
             if eyeshadowRMaxYO-eyeshadowRMinYO >= 17:
@@ -545,7 +623,7 @@ class GameMode(Mode):
 
         lipstickXValuesO = []
         lipstickYValuesO = []
-        for (x, y, r, color) in mode.drawnLipstickDots:
+        for (x, y) in mode.drawnLipstick:
             lipstickXValuesO.append(x)
             lipstickYValuesO.append(y)
         if len(lipstickXValuesO) > 0:
@@ -554,10 +632,14 @@ class GameMode(Mode):
             lipstickMinYO = min(lipstickYValuesO)
             lipstickMaxYO = max(lipstickYValuesO)
             print(lipstickMinYO, lipstickMaxYO)
+            print(f'len lip {len(lipstickXValuesO)}')
 
             if (lipstickMaxXO-lipstickMinXO >= 37 and lipstickMaxYO-lipstickMinYO >= 13 and
-                lipstickMaxXO-lipstickMinXO < 39 and lipstickMaxYO-lipstickMinYO < 15): 
+                lipstickMaxXO-lipstickMinXO < 39 and lipstickMaxYO-lipstickMinYO < 15 and
+                len(lipstickXValuesO) > 200 ): 
                 mode.opponentLipstickScore = 100
+            if len(lipstickXValuesO) <= 200:
+                mode.opponentLipstickScore -= 20
             if lipstickMaxXO-lipstickMinXO >= 39: 
                 mode.opponentLipstickScore -= ((lipstickMaxXO-lipstickMinXO) - 39)
             if lipstickMaxYO-lipstickMinYO >= 15:
@@ -597,11 +679,11 @@ class GameMode(Mode):
         
             if (blushLMaxX-blushLMinX >= 20 and blushLMaxY-blushLMinY >= 20 and 
                 blushLMaxX-blushLMinX < 23 and blushLMaxY-blushLMinY < 23 and
-                blushLMinX > 630 and blushLMinY > 320): 
+                blushLMinX > 625 and blushLMinY > 315): 
                 mode.yourBlushLScore = 100
-            if blushLMinX <= 630:
+            if blushLMinX <= 625:
                 mode.yourBlushLScore -= 10
-            if blushLMinY <= 320:
+            if blushLMinY <= 315:
                 mode.yourBlushRScore -= 10
             if blushLMaxX-blushLMinX >= 23: 
                 mode.yourBlushLScore -= ((blushLMaxX-blushLMinX) - 23)
@@ -633,7 +715,7 @@ class GameMode(Mode):
             
             if (blushRMaxX-blushRMinX >= 20 and blushRMaxY-blushRMinY >= 20 and
                 blushRMaxX-blushRMinX <= 23 and blushRMaxY-blushRMinY <= 23 and
-                blushRMinX > 720 and blushRMinY > 320): 
+                blushRMinX > 720 and blushRMinY > 315): 
                 mode.yourBlushRScore = 100
             if blushRMinX <= 720:
                 mode.yourBlushRScore -= 10
@@ -666,12 +748,15 @@ class GameMode(Mode):
             eyeshadowLMinY = min(eyeshadowLYValues)
             eyeshadowLMaxY = max(eyeshadowLYValues)
             print(f"eyeL: {eyeshadowLMinX, eyeshadowLMaxX, eyeshadowLMinY, eyeshadowLMaxY}")
+            print(f'your len L eye {len(eyeshadowLXValues)}')
 
             if (eyeshadowLMaxX-eyeshadowLMinX >= 48 and eyeshadowLMaxY-eyeshadowLMinY >= 17 and
                 eyeshadowLMaxX-eyeshadowLMinX < 50 and eyeshadowLMaxY-eyeshadowLMinY < 20 and
-                eyeshadowLMinX > 615 and eyeshadowLMinY > 260): 
+                eyeshadowLMinX > 610 and eyeshadowLMinY > 260 and len(eyeshadowLXValues) >= 50):
                 mode.yourEyeshadowLScore = 100
-            if eyeshadowLMinX <= 615:
+            if len(eyeshadowLXValues) < 50:
+                mode.yourEyeshadowLScore -= 10
+            if eyeshadowLMinX <= 610:
                 mode.yourEyeshadowLScore -= 10
             if eyeshadowLMinY <= 260:
                 mode.yourEyeshadowLScore -= 10
@@ -702,11 +787,14 @@ class GameMode(Mode):
             eyeshadowRMinY = min(eyeshadowRYValues)
             eyeshadowRMaxY = max(eyeshadowRYValues)
             print(f"eyeR: {eyeshadowRMinX, eyeshadowRMaxX, eyeshadowRMinY, eyeshadowRMaxY}")
+            print(f'your len R eye {len(eyeshadowRXValues)}')
 
             if (eyeshadowRMaxX-eyeshadowRMinX >= 48 and eyeshadowRMaxY-eyeshadowRMinY >= 17 and
                 eyeshadowRMaxX-eyeshadowRMinX < 50 and eyeshadowRMaxY-eyeshadowRMinY < 20 and
-                eyeshadowRMinX > 705 and eyeshadowRMinY > 260):
+                eyeshadowRMinX > 705 and eyeshadowRMinY > 260 and len(eyeshadowRXValues) >= 50):
                 mode.yourEyeshadowRScore = 100
+            if len(eyeshadowRXValues) < 50:
+                mode.yourEyeshadowRScore -= 10
             if eyeshadowRMinX <= 705:
                 mode.yourEyeshadowRScore -= 10
             if eyeshadowRMinY <= 260:
@@ -738,11 +826,14 @@ class GameMode(Mode):
             lipstickMinY = min(lipstickYValues)
             lipstickMaxY = max(lipstickYValues)
             print(f'lips:{lipstickMinX,lipstickMaxX,lipstickMinY,lipstickMaxY}')
+            print(f'your len lips {len(lipstickXValues)}')
 
             if (lipstickMaxX-lipstickMinX >= 38 and lipstickMaxY-lipstickMinY >= 13 and
                 lipstickMaxX-lipstickMinX < 39 and lipstickMaxY-lipstickMinY < 15 and
-                lipstickMinX > 665 and lipstickMinY > 350): 
+                lipstickMinX > 665 and lipstickMinY > 350 and len(lipstickXValues) >= 80): 
                 mode.yourLipstickScore = 100
+            if len(lipstickXValues) < 80:
+                mode.yourLipstickScore -= 10
             if lipstickMinX <= 665:
                 mode.yourLipstickScore -= 10
             if lipstickMinY <= 350:
@@ -787,7 +878,7 @@ class GameMode(Mode):
         #timer
         canvas.create_line(mode.cx - 30, 0, mode.cx - 30, mode.height, fill = "black", width = 5)
         canvas.create_rectangle(mode.cx - 80 - 30, 0, mode.cx + 80 - 30, 40, fill = "white", outline = "black")
-        canvas.create_text(mode.cx - 30, 20, text=f'{mode.timeLeft}s remaining', font="Arial 20 bold")
+        canvas.create_text(mode.cx - 30, 20, text=f'{math.floor(mode.timeLeft)}s remaining', font="Arial 20 bold")
 
         #customer and order
         canvas.create_text(mode.cx // 2 - 30, 70, text=StartMode.name, font="Arial 30 bold")
@@ -907,6 +998,9 @@ class GameMode(Mode):
         canvas.create_text(mode.cx, mode.height - 40, text = "Try Again", font = "Arial 30 bold", fill = "black")
 
     def opponentDrawing(mode, canvas):
+        canvas.create_oval(170 - 20, 330 - 20, 170 + 20, 330 + 20)
+
+        canvas.create_oval(265 - 20, 330 - 20, 265 + 20, 330 + 20)
         for (cx, cy) in mode.drawnBlushL:
             mode.opponentR = 10
             canvas.create_oval(cx-mode.opponentR, cy-mode.opponentR, cx+mode.opponentR, cy+mode.opponentR, \

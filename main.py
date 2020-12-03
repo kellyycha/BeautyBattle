@@ -9,6 +9,6 @@ class MyModalApp(ModalApp):
         app.gameMode = GameMode()
         app.helpMode = HelpMode()
         app.setActiveMode(app.startMode)
-        app.timerDelay = 50
+        app.timerDelay = 10
 
 MyModalApp(width=1000, height=500)

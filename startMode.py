@@ -15,7 +15,7 @@ class StartMode(Mode):
         
         #to zoom in the title screen
         mode.time = 0
-        mode.size = 0
+        mode.size = 15
         mode.textcx = mode.width
 
         mode.opponentOptions()
@@ -67,11 +67,11 @@ class StartMode(Mode):
         #increases size of title text
         mode.time += mode.timerDelay
         if mode.textcx > mode.width//2:
-            mode.size += 5
-            mode.textcx -= 40
+            mode.size += 4
+            mode.textcx -= 30
 
-        #automatically shows the options screen after 2 seconds
-        if mode.showOptions == False and mode.time > 2000:
+        #automatically shows the options screen after 3 seconds
+        if mode.showOptions == False and mode.time > 3000:
             mode.showOptions = True
 
     def redrawAll(mode, canvas):
