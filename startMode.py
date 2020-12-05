@@ -2,7 +2,7 @@ from cmu_112_graphics import *
 from tkinter import *
 
 class StartMode(Mode):
-    #class attributes to carry over different AIs
+    #class attribute carry over AI level
     name = ""
     easy = False
     medium = False
@@ -29,6 +29,12 @@ class StartMode(Mode):
         mode.professional = mode.scaleImage(mode.loadImage("images/professional.png"), 1/4)
         # Expert image: https://graphicmama.com/cartoon-character/cartoon-elegant-woman-vector-character 
         mode.expert = mode.scaleImage(mode.loadImage("images/expert.png"), 1/4)
+
+    #from 15112 PIL Notes
+    def getCachedPhotoImage(mode, image):
+        if ('cachedPhotoImage' not in image.__dict__):
+            image.cachedPhotoImage = ImageTk.PhotoImage(image)
+        return image.cachedPhotoImage
 
     def mousePressed(mode, event):
         if mode.showOptions:
@@ -76,7 +82,8 @@ class StartMode(Mode):
 
     def redrawAll(mode, canvas):
         #background
-        canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
+        bg = StartMode.getCachedPhotoImage(mode, mode.background)
+        canvas.create_image(mode.cx, mode.cy, image = bg)
 
         #title text
         if mode.showOptions == False:
@@ -88,11 +95,14 @@ class StartMode(Mode):
             canvas.create_text(mode.cx, 70, text = "Select an Opponent", font = "Arial 50 bold", fill = "black")
             
             #show options
-            canvas.create_image(mode.cx - 200, mode.cy + 50, image = ImageTk.PhotoImage(mode.amateur))
+            amateur = StartMode.getCachedPhotoImage(mode, mode.amateur)
+            canvas.create_image(mode.cx - 200, mode.cy + 50, image = amateur)
             canvas.create_text(mode.cx - 200, 150, text = "Amateur", fill = "black", font = "Arial 20 bold")
-            canvas.create_image(mode.cx, mode.cy + 50, image = ImageTk.PhotoImage(mode.professional))
+            pro = StartMode.getCachedPhotoImage(mode, mode.professional)
+            canvas.create_image(mode.cx, mode.cy + 50, image = pro)
             canvas.create_text(mode.cx, 150, text = "Professional", fill = "black", font = "Arial 20 bold")
-            canvas.create_image(mode.cx + 200, mode.cy + 50, image = ImageTk.PhotoImage(mode.expert))
+            expert = StartMode.getCachedPhotoImage(mode, mode.expert)
+            canvas.create_image(mode.cx + 200, mode.cy + 50, image = expert)
             canvas.create_text(mode.cx + 200, 150, text = "Expert", fill = "black", font = "Arial 20 bold")
            
             #show challenge button after selection

@@ -1,8 +1,6 @@
 from cmu_112_graphics import *
 import math
 import random
-from PIL import Image, ImageDraw
-from PIL import ImageColor
 
 def appStarted(mode):
     mode.opponentPenX = 170

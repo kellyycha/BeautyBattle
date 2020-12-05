@@ -20,7 +20,7 @@ def appStarted(mode):
     mode.opponentBlushLScore = 100
     mode.opponentBlushRScore = 100
 
-    mode.timerDelay = 50
+    mode.timerDelay = 1000
 
 
 def timerFired(mode):

@@ -66,27 +66,27 @@ def moveEasyAI(mode):
 
         if len(eyeshadowList) < 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50:
             mode.opponentPenX -= 1 * direction
-            #mode.opponentPenY -= 1
+            mode.opponentPenY -= 1
             print('1')
             
         elif len(eyeshadowList) < 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 50:
             mode.opponentPenY += 1
-            #mode.opponentPenX -= 1 * direction
+            mode.opponentPenX -= 1 * direction
             print('2')
         
         if (mode.opponentPenX <= 150 or mode.opponentPenX >=290) and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) > 105:
             mode.opponentPenX += 1 * direction
-            #mode.opponentPenY += 1.5
+            mode.opponentPenY += 1.5
             print('3')
         
         if len(eyeshadowList) > 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50: 
-            #mode.opponentPenX += 1 * direction
+            mode.opponentPenX += 1 * direction
             mode.opponentPenY += 1
             print('4')
 
         if len(eyeshadowList) > 50 and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) <= 105:
             mode.opponentPenX += 1 * direction
-            #mode.opponentPenY -= 1
+            mode.opponentPenY -= 1
             print('5')
     
 

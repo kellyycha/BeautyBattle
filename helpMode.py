@@ -4,9 +4,16 @@ class HelpMode(Mode):
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
         mode.background = mode.loadImage("images/background.jpg")
+    
+    #from 15112 PIL Notes
+    def getCachedPhotoImage(mode, image):
+        if ('cachedPhotoImage' not in image.__dict__):
+            image.cachedPhotoImage = ImageTk.PhotoImage(image)
+        return image.cachedPhotoImage
 
     def redrawAll(mode, canvas):
-        canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
+        bg = HelpMode.getCachedPhotoImage(mode, mode.background)
+        canvas.create_image(mode.cx, mode.cy, image = bg)
 
         canvas.create_text(mode.cx, 100, text='This is the help screen!', font='Arial 30 bold')
         canvas.create_rectangle(0, mode.cy - 100, mode.width, mode.cy + 100, fill = 'white', outline = '')
