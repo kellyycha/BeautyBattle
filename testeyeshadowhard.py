@@ -1,14 +1,12 @@
 from cmu_112_graphics import *
 import math
 import random
+from PIL import Image, ImageDraw
+from PIL import ImageColor
 
 def appStarted(mode):
     mode.opponentPenX = 170
     mode.opponentPenY = 330
-    mode.opponentR = 0
-    mode.directions = [+1,2,-2,-1]
-    mode.dx = random.choice(mode.directions)
-    mode.dy = random.choice(mode.directions)
     mode.opponentR = 3
 
     mode.centerx = 170
@@ -25,7 +23,6 @@ def appStarted(mode):
 
 def timerFired(mode):
     if mode.filledEyeshadowL == False:
-        mode.drawingBlushR = False
         mode.drawingEyeshadowL = True
         moveEasyAI(mode)
     elif mode.filledEyeshadowL == True and mode.filledEyeshadowR == False: 
@@ -45,60 +42,54 @@ def moveEasyAI(mode):
     if mode.drawingEyeshadowL:
         mode.centerx = 160
         mode.centery = 313
+        direction = 1
+        eyeshadowList = mode.drawnEyeshadowL
         if mode.drawnEyeshadowL == []:
-            mode.opponentPenX = 165
-            mode.opponentPenY = 270
+            mode.opponentPenX = 192
+            mode.opponentPenY = 279
         mode.drawnEyeshadowL.append((mode.opponentPenX,mode.opponentPenY))
-            
-        xValues = []
-        for (x,y) in mode.drawnEyeshadowL:
-            xValues.append(x)
-        minX = min(xValues)
-        maxX = max(xValues)
-        if maxX-minX >= 45:
+        if len(mode.drawnEyeshadowL) >= 70:
             mode.filledEyeshadowL = True
-
+            
     elif mode.drawingEyeshadowR:
         mode.centerx = 160 + 120
         mode.centerx2 = 160 + 120
+        direction = -1
+        eyeshadowList = mode.drawnEyeshadowR
         if mode.drawnEyeshadowR == []:
-            mode.opponentPenX = 265
-            mode.opponentPenY = 270
+            mode.opponentPenX = 248
+            mode.opponentPenY = 279
         mode.drawnEyeshadowR.append((mode.opponentPenX,mode.opponentPenY))
-            
-        xValues = []
-        for (x,y) in mode.drawnEyeshadowR:
-            xValues.append(x)
-        minX = min(xValues)
-        maxX = max(xValues)
-        if maxX-minX >= 45:
+        if len(mode.drawnEyeshadowR) >= 70:
             mode.filledEyeshadowR = True
 
     if mode.drawingEyeshadowL or mode.drawingEyeshadowR:
-        if mode.opponentPenX < 155:
-            mode.opponentPenX += 2
-            mode.dx = random.choice(mode.directions)
-            mode.dy = random.choice(mode.directions)
-        if mode.opponentPenX > 285:
-            mode.opponentPenX -= 2
-            mode.dx = random.choice(mode.directions)
-            mode.dy = random.choice(mode.directions)
-            
-        if distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) <= 105:
-            mode.opponentPenX -= mode.dx
-            mode.opponentPenY = mode.opponentPenY - 1
-            mode.dx = random.choice(mode.directions)
-            mode.dy = random.choice(mode.directions)
 
-        elif distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50:
-            mode.opponentPenX += 2*mode.dx
-            mode.opponentPenY += mode.dy
+        if len(eyeshadowList) < 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50:
+            mode.opponentPenX -= 1 * direction
+            mode.opponentPenY -= 1
+            print('1')
             
-        elif distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 50:
-            mode.opponentPenX -= mode.dx
-            mode.opponentPenY = mode.opponentPenY + 1
-            mode.dx = random.choice(mode.directions)
-            mode.dy = random.choice(mode.directions)
+        elif len(eyeshadowList) < 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 50:
+            mode.opponentPenY += 1
+            mode.opponentPenX -= 1 * direction
+            print('2')
+        
+        if (mode.opponentPenX <= 150 or mode.opponentPenX >=290) and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) > 105:
+            mode.opponentPenX += 1 * direction
+            mode.opponentPenY += 1.5
+            print('3')
+        
+        if len(eyeshadowList) > 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50: 
+            mode.opponentPenX += 1 * direction
+            mode.opponentPenY += 1
+            print('4')
+
+        if len(eyeshadowList) > 50 and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) <= 105:
+            mode.opponentPenX += 1 * direction
+            mode.opponentPenY -= 1
+            print('5')
+    
 
 def redrawAll(mode, canvas):
     canvas.create_oval(160 - 50, 313 - 50, 160 + 50, 313 + 50)

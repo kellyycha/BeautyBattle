@@ -15,7 +15,7 @@ class HelpMode(Mode):
                                             \n- Fill in the dotted lines with the correct products and colors.\
                                             \n- Coloring outside the lines & not filling in completely will deduct points.\
                                             \n- Complete before time runs out! You have the opportunity to submit early\
-                                            \n  to stop your opponent form finishing.', 
+                                            \n  to stop your opponent from finishing.', 
                                             font='Arial 20')
         canvas.create_text(mode.cx, 375, text='Press H return to the game', font='Arial 20 bold')
         canvas.create_text(mode.cx, 400, text='Press S return to the start screen', font='Arial 20 bold')

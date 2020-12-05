@@ -35,29 +35,38 @@ def distance(mode, x1, y1, x2, y2):
 
 def moveEasyAI(mode):
     mode.drawnLipstick.append((mode.opponentPenX,mode.opponentPenY))
-    
-    if len(mode.drawnLipstick) >= 46 and distance(mode, mode.centerx3, mode.centery3, mode.opponentPenX, mode.opponentPenY) < 15:
+    print(len(mode.drawnLipstick))
+
+    if len(mode.drawnLipstick) >= 180:
+        mode.filledLipstick = True
+
+    if len(mode.drawnLipstick) >= 159 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 30:
+        mode.opponentPenY = 360.25
+        mode.opponentPenX += 2
+        print('5')
+
+    elif len(mode.drawnLipstick) >= 46 and distance(mode, mode.centerx3, mode.centery3, mode.opponentPenX, mode.opponentPenY) < 15:
         mode.opponentPenX -= 1
         mode.opponentPenY -= 2
         print('3')
+    
+    elif len(mode.drawnLipstick) >= 60 and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) < 15:
+        mode.opponentPenX -= 1
+        mode.opponentPenY -= 2
+        print('4')
  
-    if distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 30:
+    elif distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 30:
         mode.opponentPenY += 1
-        #mode.opponentPenX += 1
         print('1')
 
-    if distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 30 and\
+    if len(mode.drawnLipstick) < 100 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 30 and\
         (distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) < 15 or \
         distance(mode, mode.centerx3, mode.centery3, mode.opponentPenX, mode.opponentPenY) < 15):
         mode.opponentPenX += 1
         mode.opponentPenY -= 1
         print('2')
-
-
-    #if distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) > 15 and \
-     #   distance(mode, mode.centerx3, mode.centery3, mode.opponentPenX, mode.opponentPenY) > 15 and \
-     #   distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 30
-
+    
+    
 def redrawAll(mode, canvas):
     canvas.create_oval(220 - 30, 340 - 30, 220 + 30, 340 + 30)
     canvas.create_oval(220-10 - 13, 365 - 13, 220-10 + 13, 365 + 13)
