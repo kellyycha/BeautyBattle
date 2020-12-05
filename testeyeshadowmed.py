@@ -47,8 +47,8 @@ def moveEasyAI(mode):
             mode.opponentPenX = 192
             mode.opponentPenY = 279
         mode.drawnEyeshadowL.append((mode.opponentPenX,mode.opponentPenY))
-        #if len(mode.drawnEyeshadowL) >= 70:
-        #    mode.filledEyeshadowL = True
+        if len(mode.drawnEyeshadowL) >= 150:
+            mode.filledEyeshadowL = True
             
     elif mode.drawingEyeshadowR:
         mode.centerx = 160 + 120
@@ -59,34 +59,34 @@ def moveEasyAI(mode):
             mode.opponentPenX = 248
             mode.opponentPenY = 279
         mode.drawnEyeshadowR.append((mode.opponentPenX,mode.opponentPenY))
-        #if len(mode.drawnEyeshadowR) >= 70:
-        #    mode.filledEyeshadowR = True
+        if len(mode.drawnEyeshadowR) >= 150:
+            mode.filledEyeshadowR = True
 
     if mode.drawingEyeshadowL or mode.drawingEyeshadowR:
 
-        if len(eyeshadowList) < 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50:
-            mode.opponentPenX -= 1 * direction
+        if len(eyeshadowList) < 100 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50:
+            mode.opponentPenX -= 0.5 * direction
             mode.opponentPenY -= 1
             print('1')
             
-        elif len(eyeshadowList) < 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 50:
-            mode.opponentPenY += 1
-            mode.opponentPenX -= 1 * direction
+        elif len(eyeshadowList) < 100 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) > 50:
+            mode.opponentPenY += 0.5
+            mode.opponentPenX -= 0.5 * direction
             print('2')
         
         if (mode.opponentPenX <= 150 or mode.opponentPenX >=290) and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) > 105:
-            mode.opponentPenX += 1 * direction
-            mode.opponentPenY += 1.5
+            mode.opponentPenX += 0.5 * direction
+            mode.opponentPenY += 1
             print('3')
         
-        if len(eyeshadowList) > 50 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50: 
-            mode.opponentPenX += 1 * direction
-            mode.opponentPenY += 1
+        if len(eyeshadowList) > 100 and distance(mode, mode.centerx, mode.centery, mode.opponentPenX, mode.opponentPenY) <= 50: 
+            mode.opponentPenX += 0.5 * direction
+            mode.opponentPenY += 0.5
             print('4')
 
-        if len(eyeshadowList) > 50 and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) <= 105:
-            mode.opponentPenX += 1 * direction
-            mode.opponentPenY -= 1
+        if len(eyeshadowList) > 100 and distance(mode, mode.centerx2, mode.centery2, mode.opponentPenX, mode.opponentPenY) <= 105:
+            mode.opponentPenX += 0.5 * direction
+            mode.opponentPenY -= 0.5
             print('5')
     
 
