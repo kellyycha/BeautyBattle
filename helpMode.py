@@ -15,7 +15,7 @@ class HelpMode(Mode):
         bg = HelpMode.getCachedPhotoImage(mode, mode.background)
         canvas.create_image(mode.cx, mode.cy, image = bg)
 
-        canvas.create_text(mode.cx, 100, text='This is the help screen!', font='Arial 30 bold')
+        canvas.create_text(mode.cx, 100, text='This is the help screen!', font='Silom 30 bold')
         canvas.create_rectangle(0, mode.cy - 100, mode.width, mode.cy + 100, fill = 'white', outline = '')
         canvas.create_text(mode.cx + 150, mode.cy, text='You want a spot as an employee at the KC Beauty Studio,\
                                             \nbut there is only one spot available.\n\
@@ -24,8 +24,8 @@ class HelpMode(Mode):
                                             \n- Complete before time runs out! You have the opportunity to submit early\
                                             \n  to stop your opponent from finishing.', 
                                             font='Arial 20')
-        canvas.create_text(mode.cx, 375, text='Press H return to the game', font='Arial 20 bold')
-        canvas.create_text(mode.cx, 400, text='Press S return to the start screen', font='Arial 20 bold')
+        canvas.create_text(mode.cx, 375, text='Press H return to the game', font='Silom 20')
+        canvas.create_text(mode.cx, 400, text='Press S return to the start screen', font='Silom 20')
 
     def keyPressed(mode, event):
         if event.key == "h":    #resumes where left off
