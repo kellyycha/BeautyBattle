@@ -11,6 +11,13 @@ class HelpMode(Mode):
             image.cachedPhotoImage = ImageTk.PhotoImage(image)
         return image.cachedPhotoImage
 
+    def keyPressed(mode, event):
+        if event.key == "h":    #resumes where left off
+            mode.app.setActiveMode(mode.app.gameMode)
+        if event.key == "s":    #restarts
+            mode.app.gameMode.appStarted()
+            mode.app.setActiveMode(mode.app.startMode)
+
     def redrawAll(mode, canvas):
         bg = HelpMode.getCachedPhotoImage(mode, mode.background)
         canvas.create_image(mode.cx, mode.cy, image = bg)
@@ -27,9 +34,4 @@ class HelpMode(Mode):
         canvas.create_text(mode.cx, 375, text='Press H return to the game', font='Silom 20')
         canvas.create_text(mode.cx, 400, text='Press S return to the start screen', font='Silom 20')
 
-    def keyPressed(mode, event):
-        if event.key == "h":    #resumes where left off
-            mode.app.setActiveMode(mode.app.gameMode)
-        if event.key == "s":    #restarts
-            mode.app.gameMode.appStarted()
-            mode.app.setActiveMode(mode.app.startMode)
+    

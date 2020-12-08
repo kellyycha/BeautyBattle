@@ -1,6 +1,7 @@
 from cmu_112_graphics import *
 from tkinter import *
 from loginScreen import LoginScreen
+#from leaderboard import Leaderboard
 
 class StartMode(Mode):
     name = ""
@@ -9,6 +10,7 @@ class StartMode(Mode):
     hard = False
 
     login = False
+    selection = None
 
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
@@ -40,11 +42,20 @@ class StartMode(Mode):
     def mousePressed(mode, event):
         if StartMode.login == True:
             if mode.challengeButton == True and (320 <= event.x <= 680) and (440 <= event.y < 480): #clicks challenge button
+                StartMode.selection = StartMode.name
                 mode.app.setActiveMode(mode.app.gameMode)
 
             #clicks leaderboard
             if (10 <= event.x <= 210) and (mode.height - 45 <= event.y <= mode.height - 10):
+                #mode.app.leaderboard.appStarted()
                 mode.app.setActiveMode(mode.app.leaderboard)
+
+            #logs out
+            if (mode.width - 110 <= event.x <= mode.width - 10) and (mode.height - 45 <= event.y <= mode.height - 10):
+                StartMode.login = False
+                mode.app.startMode.appStarted()
+                mode.app.loginScreen.appStarted()
+                mode.app.setActiveMode(mode.app.startMode)
 
             #clicks Amateur
             if (270 <= event.x <= 330) and (190 <= event.y < 420):
@@ -113,6 +124,11 @@ class StartMode(Mode):
             #show leaderboard option
             canvas.create_rectangle(10, mode.height - 45, 210, mode.height - 10, fill = "white", outline = "")
             canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Show Leaderboard", font = "Arial 20 bold", fill = "black")
+
+            #log out
+            canvas.create_rectangle(mode.width - 110, mode.height - 45, mode.width - 10, mode.height - 10, fill = "white", outline = "powder blue")
+            canvas.create_text(mode.width - 20, mode.height - 15, anchor = 'se', text = "Log Out", font = "Arial 20 bold", fill = "black")
+
 
             #show challenge button after selection
             if mode.challengeButton:

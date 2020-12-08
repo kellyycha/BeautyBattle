@@ -29,7 +29,7 @@ class LoginScreen(Mode):
         if mode.isTyping:
             if event.key == "Delete" and LoginScreen.username != []:
                 LoginScreen.username.pop()
-            elif len(LoginScreen.username) > 10:
+            elif len(LoginScreen.username) >= 7:
                 return
             elif event.key == "Space":
                 LoginScreen.username.append(" ")

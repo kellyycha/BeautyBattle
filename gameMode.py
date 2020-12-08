@@ -4,11 +4,26 @@ import random
 import math
 from startMode import *
 from PIL import Image, ImageDraw, ImageFilter
-from datetime import date
+import time
+import sqlite3
+import string
+from datetime import datetime
 
 class GameMode(Mode):
     fromGame = False
-    selection = None
+    yourScore = 0
+    opponentScore = 0
+    yourData = 0
+    progress1 = ''
+    progress2 = ''
+    progress3 = ''
+    easyProgress = []
+    mediumProgress = []
+    hardProgress = []
+    showAmateur = False
+    showProfessional = False
+    showExpert = False
+
     def appStarted(mode):
         mode.cx, mode.cy = mode.width // 2, mode.height // 2
         
@@ -80,7 +95,6 @@ class GameMode(Mode):
         mode.released = True
         mode.selectedColor = (255,255,255) 
         mode.colorShow = False
-        mode.yourScore = 0
         mode.drawnEyeshadowLDots = []
         mode.drawnEyeshadowRDots = []
         mode.yourEyeshadowLScore = 100
@@ -102,7 +116,6 @@ class GameMode(Mode):
         mode.directions = [+1,2,-2,-1]
         mode.dx = random.choice(mode.directions)
         mode.dy = random.choice(mode.directions)
-        mode.opponentScore = 0
         mode.step = 1
 
         mode.centerx = 170
@@ -190,21 +203,46 @@ class GameMode(Mode):
         draw6 = ImageDraw.Draw(img6) 
         img6.save('images/draw/drawOpponentLipstick.png')
         mode.drawOpponentLipstick = mode.loadImage('images/draw/drawOpponentLipstick.png')
-    
-    def collectData(mode):
-        GameMode.selection = StartMode.name
-        with open(f"data/{''.join(LoginScreen.username)}.txt", 'a+') as fp:
-            fp.write(f"Level: {StartMode.name}, Date: {date.today()}, Score: {mode.yourScore}\n")
-        if StartMode.name == 'Amateur':
-            with open('data/easyLeaderboard.txt', 'a+') as fp:
-                fp.write(f"Name: {''.join(LoginScreen.username)}, Score: {mode.yourScore}\n")
-        elif StartMode.name == 'Professional':
-            with open('data/mediumLeaderboard.txt', 'a+') as fp:
-                fp.write(f"Name: {''.join(LoginScreen.username)}, Score: {mode.yourScore}\n")
-        elif StartMode.name == 'Expert':
-            with open('data/hardLeaderboard.txt', 'a+') as fp:
-                fp.write(f"Name: {''.join(LoginScreen.username)}, Score: {mode.yourScore}\n")
 
+    def collectData(mode):
+        GameMode.yourData = (''.join(LoginScreen.username),GameMode.yourScore,f'{datetime.now()}')
+
+        if StartMode.selection == 'Amateur':
+            GameMode.showAmateur = True
+            conn = sqlite3.connect('data/easyLeaderboard.db')
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO easyLeaderboard VALUES (?, ?, ?)", GameMode.yourData)
+            GameMode.progress1 = cursor.execute("SELECT * FROM easyLeaderboard ORDER BY Time DESC")
+            for row in GameMode.progress1:
+                if row not in GameMode.easyProgress:
+                    if ''.join(LoginScreen.username) in row:
+                        GameMode.easyProgress.insert(0,row)
+            conn.commit()
+
+        elif StartMode.selection == 'Professional':
+            GameMode.showProfessional = True
+            conn = sqlite3.connect('data/mediumLeaderboard.db')
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO mediumLeaderboard VALUES (?, ?, ?)", GameMode.yourData)
+            GameMode.progress2 = cursor.execute("SELECT * FROM mediumLeaderboard ORDER BY Time DESC")
+            for row in GameMode.progress2:
+                if row not in GameMode.mediumProgress:
+                    if ''.join(LoginScreen.username) in row:
+                        GameMode.mediumProgress.insert(0,row)
+            conn.commit()
+
+        elif StartMode.selection == 'Expert':
+            GameMode.showExpert = True
+            conn = sqlite3.connect('data/hardLeaderboard.db')
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO hardLeaderboard VALUES (?, ?, ?)", GameMode.yourData)
+            GameMode.progress3 = cursor.execute("SELECT * FROM hardLeaderboard ORDER BY Time DESC")
+            for row in GameMode.progress3:
+                if row not in GameMode.hardProgress:
+                    if ''.join(LoginScreen.username) in row:
+                        GameMode.hardProgress.insert(0,row)
+            conn.commit()
+    
     #from 15112 PIL Notes
     def getCachedPhotoImage(mode, image):
         if ('cachedPhotoImage' not in image.__dict__):
@@ -294,7 +332,7 @@ class GameMode(Mode):
             #clicks leaderboard
             if (10 <= event.x <= 210) and (mode.height - 45 <= event.y <= mode.height - 10):
                 GameMode.fromGame = True
-                mode.app.leaderboard.appStarted()
+                #mode.app.leaderboard.appStarted()
                 mode.app.setActiveMode(mode.app.leaderboard)
             #logs out
             if (mode.width - 110 <= event.x <= mode.width - 10) and (mode.height - 45 <= event.y <= mode.height - 10):
@@ -438,31 +476,33 @@ class GameMode(Mode):
         if mode.pause == False:
             if mode.gameScreen:
                 #countdown every second
-                if mode.timeLeft > 0.092:
-                    mode.timeLeft -= 0.092
+                if mode.timeLeft > 0.1:
+                    mode.timeLeft -= 0.1
                 else:
                     mode.timeLeft = 0
                     mode.timeEnd = True
-                        
-                if StartMode.easy:
-                    GameMode.easyAI(mode)
-                
-                elif StartMode.medium:
-                    mode.step = 0.75
-                    mode.eyeshadowLen = 75
-                    mode.eyeshadowMaxLen = 100
-                    mode.blushMaxLen = 100
-                    GameMode.hardAI(mode)
-                
-                elif StartMode.hard:
-                    mode.step = 1
-                    mode.eyeshadowLen = 50
-                    mode.eyeshadowMaxLen = 70
-                    mode.blushMaxLen = 77
-                    GameMode.hardAI(mode)
                 
                 mode.timerCount += 1
 
+                if mode.timerCount % 5 == 0 and mode.timeEnd == False: 
+                    if StartMode.easy:
+                        GameMode.easyAI(mode)
+                    
+                    elif StartMode.medium:
+                        mode.step = 0.75
+                        mode.eyeshadowLen = 75
+                        mode.eyeshadowMaxLen = 100
+                        mode.blushMaxLen = 100
+                        GameMode.hardAI(mode)
+                    
+                    elif StartMode.hard:
+                        mode.step = 1
+                        mode.eyeshadowLen = 50
+                        mode.eyeshadowMaxLen = 70
+                        mode.blushMaxLen = 77
+                        GameMode.hardAI(mode)
+                    
+                
         #automatically shows the scoring screen after time ends
         if mode.scoringScreen == False and mode.timerCount > 68*10: 
             GameMode.calculateYourScore(mode)
@@ -475,10 +515,6 @@ class GameMode(Mode):
         return ((x1- x2)**2 + (y1-y2)**2)**0.5 + mode.opponentR
 
     def easyAI(mode):
-        #time is up
-        if mode.timeLeft <= 2 and mode.drawingLipstick == True and mode.filledLipstick == False:
-            mode.filledLipstick = True
-            mode.drawingLipstick = False
         #start lips if 15 seconds left
         if mode.timeLeft <= 15 and mode.filledLipstick == False and \
             (mode.drawingEyeshadowL or mode.drawingEyeshadowR or mode.drawingBlushL or mode.drawingBlushR):            
@@ -695,10 +731,6 @@ class GameMode(Mode):
             mode.drawingBlushR = False
             mode.drawingLipstick = True
             GameMode.moveHardAI(mode)
-        
-        #time is up
-        if mode.timeLeft == 0:
-            mode.drawingLipstick = False
     
     def moveHardAI(mode):
         #eyeshadow
@@ -1065,12 +1097,12 @@ class GameMode(Mode):
         elif lipstickXValuesO == []:
             mode.opponentLipstickScore = 0
         
-        mode.opponentScore = int(mode.opponentEyeshadowLScore + mode.opponentEyeshadowRScore \
+        GameMode.opponentScore = int(mode.opponentEyeshadowLScore + mode.opponentEyeshadowRScore \
                             + mode.opponentBlushLScore + mode.opponentBlushRScore \
                             + mode.opponentLipstickScore)//5
 
-        if mode.opponentScore < 0:
-            mode.opponentScore = 0
+        if GameMode.opponentScore < 0:
+            GameMode.opponentScore = 0
 
         print(mode.opponentEyeshadowLScore, mode.opponentEyeshadowRScore, \
             mode.opponentBlushLScore,mode.opponentBlushRScore, \
@@ -1266,12 +1298,12 @@ class GameMode(Mode):
             if color != mode.correctLipstickColor:
                 mode.yourLipstickScore -= 10
         
-        mode.yourScore = int(mode.yourEyeshadowLScore+mode.yourEyeshadowRScore \
+        GameMode.yourScore = int(mode.yourEyeshadowLScore+mode.yourEyeshadowRScore \
                         + mode.yourBlushLScore+mode.yourBlushRScore \
                         + mode.yourLipstickScore)//5
 
-        if mode.yourScore < 0:
-            mode.yourScore = 0
+        if GameMode.yourScore < 0:
+            GameMode.yourScore = 0
 
         print(f'your scores: {mode.yourEyeshadowLScore,mode.yourEyeshadowRScore,mode.yourBlushLScore,mode.yourBlushRScore,mode.yourLipstickScore}')
 
@@ -1520,16 +1552,16 @@ class GameMode(Mode):
         canvas.create_rectangle(mode.cx // 2 - 150, 90 - 45, mode.cx // 2 + 150, 90 + 45, fill = 'white', outline = '')
         canvas.create_rectangle(mode.cx + mode.cx // 2 - 150, 90 - 45, mode.cx + mode.cx // 2 + 150, 90 + 45, fill = 'white', outline = '')
         canvas.create_text(mode.cx // 2, 70, text=StartMode.name, font="Silom 30 bold")
-        canvas.create_text(mode.cx // 2, 110, text=f'Score: {mode.opponentScore}%', font="Silom 30 ")
+        canvas.create_text(mode.cx // 2, 110, text=f'Score: {GameMode.opponentScore}%', font="Silom 30 ")
         canvas.create_text(mode.cx + mode.cx // 2, 70, text="".join(LoginScreen.username), font="Silom 30 bold")
-        canvas.create_text(mode.cx + mode.cx // 2, 110, text=f'Score: {mode.yourScore}%', font="Silom 30 ")
+        canvas.create_text(mode.cx + mode.cx // 2, 110, text=f'Score: {GameMode.yourScore}%', font="Silom 30 ")
 
         canvas.create_rectangle(0, mode.cy - 65 - 40, mode.width, mode.cy - 65 + 40, fill = 'white', outline = '')
-        if mode.yourScore > mode.opponentScore:
+        if GameMode.yourScore > GameMode.opponentScore:
             canvas.create_text(mode.cx, mode.cy - 65, text='You Win! Congrats on getting hired!', font="Silom 40 bold")
-        elif mode.yourScore < mode.opponentScore:
+        elif GameMode.yourScore < GameMode.opponentScore:
             canvas.create_text(mode.cx, mode.cy - 65, text=f'Better luck next time, {StartMode.name} beat you.', font="Silom 40 bold")
-        elif mode.yourScore == mode.opponentScore:
+        elif GameMode.yourScore == GameMode.opponentScore:
             canvas.create_text(mode.cx, mode.cy - 65, text=f"It's a tie... try to beat {StartMode.name} next time.", font="Silom 40 bold")
     
         canvas.create_rectangle(mode.cx // 2 - 90, mode.cy + mode.cy//3 - 100, mode.cx // 2 + 90, mode.cy + mode.cy//3 + 100, fill = 'white')

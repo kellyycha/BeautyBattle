@@ -15,5 +15,4 @@ class MyModalApp(ModalApp):
         app.setActiveMode(app.startMode)
         app.timerDelay = 10
         
-
 MyModalApp(width=1000, height=500)
