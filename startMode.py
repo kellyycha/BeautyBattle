@@ -19,8 +19,8 @@ class StartMode(Mode):
 
         #to zoom in the title screen
         mode.time = 0
-        mode.size = 15
-        mode.textcx = mode.width
+        mode.size = 25
+        #mode.timerDelay = 10
 
         mode.opponentOptions()
 
@@ -87,13 +87,12 @@ class StartMode(Mode):
 
     def timerFired(mode):
         #increases size of title text
-        mode.time += mode.timerDelay
-        if mode.textcx > mode.width//2:
-            mode.size += 4
-            mode.textcx -= 30
+        mode.time += 1
+        if mode.size < 100:
+            mode.size += 5
 
         #automatically shows the login screen after 3 seconds
-        if StartMode.login == False and mode.time > 3000:
+        if StartMode.login == False and mode.time > 30:
             StartMode.login = True
             mode.app.setActiveMode(mode.app.loginScreen)
 

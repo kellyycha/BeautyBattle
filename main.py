@@ -13,6 +13,5 @@ class MyModalApp(ModalApp):
         app.leaderboard = Leaderboard()
         app.loginScreen = LoginScreen()
         app.setActiveMode(app.startMode)
-        app.timerDelay = 10
         
 MyModalApp(width=1000, height=500)
