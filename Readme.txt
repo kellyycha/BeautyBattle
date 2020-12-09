@@ -1,5 +1,3 @@
-# termProject
-
 Name: Beauty Battle
 
 Description: 
@@ -11,7 +9,7 @@ Run the file called "main.py"
 The database files are already created with data previously entered, 
 but you can delete everything in the folder "data" and run the code called "databases.py" before running "main.py" to start with no prior data.
 
-Libraries installed:
+Libraries:
 - Tkinter
 - PIL
 - Pygame

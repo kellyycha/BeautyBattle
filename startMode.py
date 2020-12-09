@@ -2,7 +2,6 @@ from cmu_112_graphics import *
 from tkinter import *
 from loginScreen import LoginScreen
 import pygame
-from threading import Thread
 
 class StartMode(Mode):
     name = ""
