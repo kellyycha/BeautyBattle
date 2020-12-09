@@ -12,9 +12,11 @@ class HelpMode(Mode):
         return image.cachedPhotoImage
 
     def keyPressed(mode, event):
-        if event.key == "h":    #resumes where left off
+        #resumes where left off
+        if event.key == "h":
             mode.app.setActiveMode(mode.app.gameMode)
-        if event.key == "s":    #restarts
+        #restarts
+        if event.key == "s":
             mode.app.gameMode.appStarted()
             mode.app.setActiveMode(mode.app.startMode)
 

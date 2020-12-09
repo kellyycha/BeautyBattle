@@ -8,6 +8,8 @@ import sys
 if ((sys.version_info[0] != 3) or (sys.version_info[1] < 6)):
     raise Exception('cmu_112_graphics.py requires Python version 3.6 or later.')
 
+import pygame
+
 # Track version and file update timestamp
 import datetime
 MAJOR_VERSION = 0
@@ -568,6 +570,7 @@ class App(object):
                 appLabel = app._title
             else:
                 appLabel += f" '{app._title}'"
+        pygame.mixer.music.stop()
         return f"*** Closing {appLabel}.  Bye! ***\n"
 
     def _showRootWindow(app):

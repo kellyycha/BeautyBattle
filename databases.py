@@ -1,6 +1,3 @@
-from gameMode import GameMode
-from startMode import StartMode
-from loginScreen import LoginScreen
 import sqlite3
 
 #easy leaderboard

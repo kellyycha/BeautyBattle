@@ -12,9 +12,8 @@ class Leaderboard(Mode):
         mode.background = mode.loadImage("images/background.jpg")
         mode.ordered = ''
         mode.opponent = ''
-
+            
     def mousePressed(mode, event):
-        print(f'{(event.x,event.y)},')
         if (10 <= event.x <= 110) and (mode.height - 45 <= event.y <= mode.height - 10):
             if GameMode.fromGame:
                 mode.app.setActiveMode(mode.app.gameMode)
@@ -68,14 +67,14 @@ class Leaderboard(Mode):
             Leaderboard.displayData(mode, canvas)
             conn.close()
         
-        if GameMode.showProfessional:
+        elif GameMode.showProfessional:
             conn = sqlite3.connect('data/mediumLeaderboard.db')
             cursor = conn.cursor()
             mode.ordered = cursor.execute("SELECT * FROM mediumLeaderboard ORDER BY Score DESC")
             Leaderboard.displayData(mode, canvas)
             conn.close()
 
-        if GameMode.showExpert:
+        elif GameMode.showExpert:
             conn = sqlite3.connect('data/hardLeaderboard.db')
             cursor = conn.cursor()
             mode.ordered = cursor.execute("SELECT * FROM hardLeaderboard ORDER BY Score DESC")
@@ -83,34 +82,54 @@ class Leaderboard(Mode):
             conn.close()
 
     def drawGraph(mode, canvas):
-        boxHeight = ((mode.cy + 180) - (mode.cy - 80))/ 5
-        for i in range(5):
-            canvas.create_rectangle(mode.cx//2 + mode.cx - 120, (mode.cy - 80) + i * boxHeight, mode.cx//2  + mode.cx + 120, (mode.cy - 80) + (i+1) * boxHeight, fill = "pink", outline = "black")
-        canvas.create_line(290 + mode.cx,170,290 + mode.cx,430, fill = 'black')
-
-        if GameMode.showAmateur == True:
-            i = 0
-            for row in GameMode.easyProgress:
-                if i <= 204:
-                    canvas.create_text(mode.cx//2 + mode.cx - 100, mode.cy - 50 + i, text = row[2][:11], anchor = 'w', font = "Arial 25")
-                    canvas.create_text(mode.cx//2 + mode.cx + 100, mode.cy - 50 + i, text = row[1], anchor = 'e', font = "Arial 25 bold")
-                    i += 51
+        if GameMode.showAmateur:
+            if GameMode.easyScores == []:
+                canvas.create_text(mode.cx + mode.cx//2, 300, text = "Play this level to\nunlock your progress", font = "Silom 25", fill = "DeepPink2")
+            while len(GameMode.easyScores) > 16:
+                GameMode.easyScores.pop(0)
+            for i in range(len(GameMode.easyScores)):
+                score = GameMode.easyScores[i]
+                if i+1 < len(GameMode.easyScores):
+                    nextScore = GameMode.easyScores[i+1]
+                    canvas.create_line((mode.cx//2 + mode.cx - 150) + i*20, (395 - score*2),(mode.cx//2 + mode.cx - 150) + (i+1)*20, (395 - nextScore*2), fill = 'pink', width = 3)
+                canvas.create_oval((mode.cx//2 + mode.cx - 150) + i*20 -5, (395 - score*2) - 5,(mode.cx//2 + mode.cx - 150) + i*20 +5, (395 - score*2) +5, \
+                                    fill = 'DeepPink2', outline = '')
         
-        if GameMode.showProfessional == True:
-            i = 0
-            for row in GameMode.mediumProgress:
-                if i <= 204:
-                    canvas.create_text(mode.cx//2 + mode.cx - 100, mode.cy - 50 + i, text = row[2][:11], anchor = 'w', font = "Arial 25")
-                    canvas.create_text(mode.cx//2 + mode.cx + 100, mode.cy - 50 + i, text = row[1], anchor = 'e', font = "Arial 25 bold")
-                    i += 51
-
-        if GameMode.showExpert == True:
-            i = 0
-            for row in GameMode.hardProgress:
-                if i <= 204:
-                    canvas.create_text(mode.cx//2 + mode.cx - 100, mode.cy - 50 + i, text = row[2][:11], anchor = 'w', font = "Arial 25")
-                    canvas.create_text(mode.cx//2 + mode.cx + 100, mode.cy - 50 + i, text = row[1], anchor = 'e', font = "Arial 25 bold")
-                    i += 51
+        elif GameMode.showProfessional:
+            if GameMode.mediumScores == []:
+                canvas.create_text(mode.cx + mode.cx//2, 300, text = "Play this level to\nunlock your progress", font = "Silom 25", fill = "DeepPink2")
+            while len(GameMode.mediumScores) > 16:
+                GameMode.mediumScores.pop(0)
+            for i in range(len(GameMode.mediumScores)):
+                score = GameMode.mediumScores[i]
+                if i+1 < len(GameMode.mediumScores):
+                    nextScore = GameMode.mediumScores[i+1]
+                    canvas.create_line((mode.cx//2 + mode.cx - 150) + i*20, (395 - score*2),(mode.cx//2 + mode.cx - 150) + (i+1)*20, (395 - nextScore*2), fill = 'pink', width = 3)
+                canvas.create_oval((mode.cx//2 + mode.cx - 150) + i*20 -5, (395 - score*2) - 5,(mode.cx//2 + mode.cx - 150) + i*20 +5, (395 - score*2) +5, \
+                                    fill = 'DeepPink2', outline = '')
+            
+        elif GameMode.showExpert:
+            if GameMode.hardScores == []:
+                canvas.create_text(mode.cx + mode.cx//2, 300, text = "Play this level to\nunlock your progress", font = "Silom 25", fill = "DeepPink2")
+            while len(GameMode.hardScores) > 16:
+                GameMode.hardScores.pop(0)
+            for i in range(len(GameMode.hardScores)):
+                score = GameMode.hardScores[i]
+                if i+1 < len(GameMode.hardScores):
+                    nextScore = GameMode.hardScores[i+1]
+                    canvas.create_line((mode.cx//2 + mode.cx - 150) + i*20, (395 - score*2),(mode.cx//2 + mode.cx - 150) + (i+1)*20, (395 - nextScore*2), fill = 'pink', width = 3)
+                canvas.create_oval((mode.cx//2 + mode.cx - 150) + i*20 -5, (395 - score*2) - 5,(mode.cx//2 + mode.cx - 150) + i*20 +5, (395 - score*2) +5, \
+                                    fill = 'DeepPink2', outline = '')
+            
+    def drawAxesAndLabels(mode,canvas):
+        canvas.create_rectangle(mode.cx//2 + mode.cx - 160, 175, mode.cx//2 + mode.cx + 160, 400, fill = 'white')
+        canvas.create_text((mode.cx//2 + mode.cx - 160) - 30, 300, anchor = 's', text = "Scores", angle = 90, font = "Arial 20 bold")
+        canvas.create_text(mode.cx//2 + mode.cx, 400 + 10, anchor = 'n', text = "Times", font = "Arial 20 bold")
+        for i in range(11):
+            if i == 0:
+                canvas.create_text((mode.cx//2 + mode.cx - 160), 395 - (i*20), anchor = 'e', text = f"{i}")
+            if i > 0:
+                canvas.create_text((mode.cx//2 + mode.cx - 160), 395 - (i*20), anchor = 'e', text = f"{i}0")
 
     def otherOptionsButton(mode, canvas):
         canvas.create_rectangle(mode.cx - 100, mode.height - 45, mode.cx + 100, mode.height - 10, fill = "white", outline = "")
@@ -136,7 +155,6 @@ class Leaderboard(Mode):
 
             canvas.create_rectangle(mode.width//4 + mode.cx - 100, mode.cy, mode.width//4 + mode.cx + 100, mode.cy + 60, fill = 'pink', outline = '')
             canvas.create_text(mode.width//4 + mode.cx, mode.cy + 30, text = "Expert", font = "Silom 30", fill = "black")
-            #print('none')
         
         else:
             if GameMode.showAmateur == True:
@@ -153,5 +171,8 @@ class Leaderboard(Mode):
             canvas.create_text(mode.cx + mode.cx//2, 130, text = f"{''.join(LoginScreen.username)}'s PROGRESS", font = "Silom 30", fill = "black")
         
             Leaderboard.drawLeaderboard(mode, canvas)
+            Leaderboard.drawAxesAndLabels(mode,canvas)
             Leaderboard.drawGraph(mode, canvas)
+            
+            
             
