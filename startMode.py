@@ -131,17 +131,17 @@ class StartMode(Mode):
         else:
             mode.fill = 'white'
         canvas.create_rectangle((mode.width - 100) - 90, 70 - 20, (mode.width - 100) + 90, 70 + 20, fill = mode.fill, outline = '')
-        canvas.create_text((mode.width - 100), 70, text = "Change Duration", font = "Silom 18", fill = 'black')
+        canvas.create_text((mode.width - 100), 70, text = "Change Duration", font = "Chicago 18", fill = 'black')
         if mode.changeDurationPressed:
             for i in range(3):
                 canvas.create_rectangle((mode.width - 100) - 30, 100 + i*50, (mode.width - 100) + 30, 150 + i*50, fill = 'white', outline = 'pink')
-                canvas.create_text((mode.width - 100), 125 + i*50, text = f"{(i+1)*3}0s", font = "Silom 20", fill = 'black')
+                canvas.create_text((mode.width - 100), 125 + i*50, text = f"{(i+1)*3}0s", font = "Chicago 20", fill = 'black')
                 if StartMode.timeDuration == 30:
-                    canvas.create_text((mode.width - 100), 125 + 0*50, text = f"30s", font = "Silom 20", fill = 'DeepPink2')
+                    canvas.create_text((mode.width - 100), 125 + 0*50, text = f"30s", font = "Chicago 20", fill = 'DeepPink2')
                 elif StartMode.timeDuration == 60:
-                    canvas.create_text((mode.width - 100), 125 + 1*50, text = f"60s", font = "Silom 20", fill = 'DeepPink2')
+                    canvas.create_text((mode.width - 100), 125 + 1*50, text = f"60s", font = "Chicago 20", fill = 'DeepPink2')
                 elif StartMode.timeDuration == 90:
-                    canvas.create_text((mode.width - 100), 125 + 2*50, text = f"90s", font = "Silom 20", fill = 'DeepPink2')        
+                    canvas.create_text((mode.width - 100), 125 + 2*50, text = f"90s", font = "Chicago 20", fill = 'DeepPink2')        
 
     def drawButtons(mode, canvas):
         #show leaderboard option
@@ -156,21 +156,21 @@ class StartMode(Mode):
         if mode.challengeButton:
             canvas.create_rectangle(mode.cx - 180, mode.height - 60, mode.cx + 180, mode.height - 20, fill = "pink", outline = "")
             if StartMode.name == "Professional":
-                canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {StartMode.name}", font = "Silom 25", fill = "black")
+                canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {StartMode.name}", font = "Chicago 25", fill = "black")
             else:
-                canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {StartMode.name}", font = "Silom 30", fill = "black")
+                canvas.create_text(mode.cx, mode.height - 40, text = f"Challenge {StartMode.name}", font = "Chicago 30", fill = "black")
 
     def showOptions(mode, canvas):
         #show options
         amateur = StartMode.getCachedPhotoImage(mode, mode.amateur)
         canvas.create_image(mode.cx - 200, mode.cy + 50, image = amateur)
-        canvas.create_text(mode.cx - 200, 150, text = "Amateur", fill = "black", font = "Silom 20")
+        canvas.create_text(mode.cx - 200, 150, text = "Amateur", fill = "black", font = "Chicago 20")
         pro = StartMode.getCachedPhotoImage(mode, mode.professional)
         canvas.create_image(mode.cx, mode.cy + 50, image = pro)
-        canvas.create_text(mode.cx, 150, text = "Professional", fill = "black", font = "Silom 20")
+        canvas.create_text(mode.cx, 150, text = "Professional", fill = "black", font = "Chicago 20")
         expert = StartMode.getCachedPhotoImage(mode, mode.expert)
         canvas.create_image(mode.cx + 200, mode.cy + 50, image = expert)
-        canvas.create_text(mode.cx + 200, 150, text = "Expert", fill = "black", font = "Silom 20")
+        canvas.create_text(mode.cx + 200, 150, text = "Expert", fill = "black", font = "Chicago 20")
 
     def redrawAll(mode, canvas):
         #background
@@ -180,11 +180,11 @@ class StartMode(Mode):
         #title text
         if StartMode.login == False:
             text = "Beauty\n    Battle"
-            canvas.create_text(mode.cx, mode.cy, text = text, fill = 'pink', font = f"Silom {mode.size+2}")
-            canvas.create_text(mode.cx, mode.cy, text = text, fill = 'black', font = f"Silom {mode.size}")
+            canvas.create_text(mode.cx, mode.cy, text = text, fill = 'pink', font = f"Chicago {mode.size+2}")
+            canvas.create_text(mode.cx, mode.cy, text = text, fill = 'black', font = f"Chicago {mode.size}")
         
         else:
-            canvas.create_text(mode.cx, 70, text = "Select an Opponent", font = "Silom 50", fill = "black")
+            canvas.create_text(mode.cx, 70, text = "Select an Opponent", font = "Chicago 50", fill = "black")
               
             StartMode.showOptions(mode, canvas)
             StartMode.drawButtons(mode, canvas)

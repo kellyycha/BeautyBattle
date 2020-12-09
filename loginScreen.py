@@ -27,7 +27,7 @@ class LoginScreen(Mode):
         alphabet = string.ascii_letters
         digits = string.digits
         if mode.isTyping:
-            if event.key == "Delete" and LoginScreen.username != []:
+            if (event.key == "Delete" or event.key == "Backspace") and LoginScreen.username != []:
                 LoginScreen.username.pop()
             elif len(LoginScreen.username) >= 7:
                 return
@@ -40,7 +40,7 @@ class LoginScreen(Mode):
         #background
         canvas.create_image(mode.cx, mode.cy, image = ImageTk.PhotoImage(mode.background))
 
-        canvas.create_text(mode.cx, mode.cy - 60, text = "Enter Username:", font = "Silom 40 bold")
+        canvas.create_text(mode.cx, mode.cy - 60, text = "Enter Username:", font = "Chicago 40 bold")
         canvas.create_rectangle(mode.cx - 110, mode.cy - 20, mode.cx + 110, mode.cy + 20, fill = "white")
         if mode.isTyping == False:
             canvas.create_text(mode.width//2, mode.height//2, text = "Click to start typing...", font = "Arial 20", fill = 'gray')
@@ -49,4 +49,4 @@ class LoginScreen(Mode):
 
         #enter box
         canvas.create_rectangle(mode.cx - 50, mode.cy + 60 - 20, mode.cx + 50, mode.cy + 60 + 20, fill = "pink", outline = '')
-        canvas.create_text(mode.cx, mode.cy + 60, text = "ENTER", font = "Silom 20")
+        canvas.create_text(mode.cx, mode.cy + 60, text = "ENTER", font = "Chicago 20")

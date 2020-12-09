@@ -84,7 +84,7 @@ class Leaderboard(Mode):
     def drawGraph(mode, canvas):
         if GameMode.showAmateur:
             if GameMode.easyScores == []:
-                canvas.create_text(mode.cx + mode.cx//2, 300, text = "Play this level to\nunlock your progress", font = "Silom 25", fill = "DeepPink2")
+                canvas.create_text(mode.cx + mode.cx//2, 280, text = "Play this level to\nunlock your progress", font = "Chicago 25", fill = "DeepPink2")
             while len(GameMode.easyScores) > 16:
                 GameMode.easyScores.pop(0)
             for i in range(len(GameMode.easyScores)):
@@ -97,7 +97,7 @@ class Leaderboard(Mode):
         
         elif GameMode.showProfessional:
             if GameMode.mediumScores == []:
-                canvas.create_text(mode.cx + mode.cx//2, 300, text = "Play this level to\nunlock your progress", font = "Silom 25", fill = "DeepPink2")
+                canvas.create_text(mode.cx + mode.cx//2, 280, text = "Play this level to\nunlock your progress", font = "Chicago 25", fill = "DeepPink2")
             while len(GameMode.mediumScores) > 16:
                 GameMode.mediumScores.pop(0)
             for i in range(len(GameMode.mediumScores)):
@@ -110,7 +110,7 @@ class Leaderboard(Mode):
             
         elif GameMode.showExpert:
             if GameMode.hardScores == []:
-                canvas.create_text(mode.cx + mode.cx//2, 300, text = "Play this level to\nunlock your progress", font = "Silom 25", fill = "DeepPink2")
+                canvas.create_text(mode.cx + mode.cx//2, 280, text = "Play this level to\nunlock your progress", font = "Chicago 25", fill = "DeepPink2")
             while len(GameMode.hardScores) > 16:
                 GameMode.hardScores.pop(0)
             for i in range(len(GameMode.hardScores)):
@@ -127,9 +127,9 @@ class Leaderboard(Mode):
         canvas.create_text(mode.cx//2 + mode.cx, 400 + 10, anchor = 'n', text = "Times", font = "Arial 20 bold")
         for i in range(11):
             if i == 0:
-                canvas.create_text((mode.cx//2 + mode.cx - 160), 395 - (i*20), anchor = 'e', text = f"{i}")
+                canvas.create_text((mode.cx//2 + mode.cx - 165), 395 - (i*20), anchor = 'e', text = f"{i}")
             if i > 0:
-                canvas.create_text((mode.cx//2 + mode.cx - 160), 395 - (i*20), anchor = 'e', text = f"{i}0")
+                canvas.create_text((mode.cx//2 + mode.cx - 165), 395 - (i*20), anchor = 'e', text = f"{i}0")
 
     def otherOptionsButton(mode, canvas):
         canvas.create_rectangle(mode.cx - 100, mode.height - 45, mode.cx + 100, mode.height - 10, fill = "white", outline = "")
@@ -144,17 +144,17 @@ class Leaderboard(Mode):
         canvas.create_text(20, mode.height - 15, anchor = 'sw', text = "Go Back", font = "Arial 20 bold", fill = "black")
 
         if GameMode.showAmateur == False and GameMode.showProfessional == False and GameMode.showExpert == False:
-            canvas.create_text(mode.cx, 100, text = "Leaderboards & Progress", font = "Silom 50 bold", fill = "black")
-            canvas.create_text(mode.cx, 190, text = "Choose a level to view", font = "Silom 40 bold", fill = "black")
+            canvas.create_text(mode.cx, 100, text = "Leaderboards & Progress", font = "Chicago 50 bold", fill = "black")
+            canvas.create_text(mode.cx, 190, text = "Choose a level to view", font = "Chicago 40 bold", fill = "black")
 
             canvas.create_rectangle(mode.width//4 - 100, mode.cy, mode.width//4 + 100, mode.cy + 60, fill = 'pink', outline = '')
-            canvas.create_text(mode.width//4, mode.cy + 30, text = "Amateur", font = "Silom 30", fill = "black")
+            canvas.create_text(mode.width//4, mode.cy + 30, text = "Amateur", font = "Chicago 30", fill = "black")
 
             canvas.create_rectangle(mode.cx - 100, mode.cy, mode.cx + 100, mode.cy + 60, fill = 'pink', outline = '')
-            canvas.create_text(mode.cx, mode.cy + 30, text = "Professional", font = "Silom 27", fill = "black")
+            canvas.create_text(mode.cx, mode.cy + 30, text = "Professional", font = "Chicago 27", fill = "black")
 
             canvas.create_rectangle(mode.width//4 + mode.cx - 100, mode.cy, mode.width//4 + mode.cx + 100, mode.cy + 60, fill = 'pink', outline = '')
-            canvas.create_text(mode.width//4 + mode.cx, mode.cy + 30, text = "Expert", font = "Silom 30", fill = "black")
+            canvas.create_text(mode.width//4 + mode.cx, mode.cy + 30, text = "Expert", font = "Chicago 30", fill = "black")
         
         else:
             if GameMode.showAmateur == True:
@@ -164,11 +164,11 @@ class Leaderboard(Mode):
             elif GameMode.showExpert == True:
                 mode.opponent = 'Expert'
             
-            canvas.create_text(mode.cx, 80, text = f"{mode.opponent} Leaderboard & Progress", font = "Silom 40 bold", fill = "black")
+            canvas.create_text(mode.cx, 80, text = f"{mode.opponent} Leaderboard & Progress", font = "Chicago 40 bold", fill = "black")
             canvas.create_line(mode.cx, 110, mode.cx, mode.height, fill = "black", width = 4)
             Leaderboard.otherOptionsButton(mode, canvas)
-            canvas.create_text(mode.cx//2, 130, text = "HIGH SCORES", font = "Silom 30", fill = "black")
-            canvas.create_text(mode.cx + mode.cx//2, 130, text = f"{''.join(LoginScreen.username)}'s PROGRESS", font = "Silom 30", fill = "black")
+            canvas.create_text(mode.cx//2, 130, text = "HIGH SCORES", font = "Chicago 30", fill = "black")
+            canvas.create_text(mode.cx + mode.cx//2, 130, text = f"{''.join(LoginScreen.username)}'s PROGRESS", font = "Chicago 30", fill = "black")
         
             Leaderboard.drawLeaderboard(mode, canvas)
             Leaderboard.drawAxesAndLabels(mode,canvas)

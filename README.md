@@ -16,3 +16,5 @@ Libraries installed:
 - PIL
 - Pygame
 - SQLite3
+
+Also, download this font: https://ttfonts.net/font/5767_Chicago.htm

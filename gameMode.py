@@ -1371,12 +1371,12 @@ class GameMode(Mode):
         customer = GameMode.getCachedPhotoImage(mode, mode.customer)
         canvas.create_image(mode.cx - 150, mode.cy + 50, image = customer)
 
-        canvas.create_text(mode.cx, 70, text = "A customer has arrived!", font = "Silom 50 bold", fill = "black")
+        canvas.create_text(mode.cx, 70, text = "A customer has arrived!", font = "Chicago 50 bold", fill = "black")
         canvas.create_oval(mode.cx + 225 + 220, mode.cy + 100, mode.cx + 225 - 220, mode.cy - 100, fill = "white", outline = "powder blue")
         canvas.create_text(mode.cx + 225, mode.cy, text = f"\"I would like \n{mode.eyeshadowColor} eyeshadow, \nwith {mode.blushColor} blush, \nand {mode.lipstickColor} lipstick.\"",
                                 font = "Arial 30 bold")
         canvas.create_rectangle(mode.cx + 175, mode.height - 125, mode.cx + 275, mode.height - 75, fill = "pink", outline = "")
-        canvas.create_text(mode.cx + 225, mode.height - 100, text = "Go!", font = "Silom 30 bold", fill = "black")
+        canvas.create_text(mode.cx + 225, mode.height - 100, text = "Go!", font = "Chicago 30 bold", fill = "black")
 
         #instructions to open help
         canvas.create_rectangle(10, mode.height - 45, 180, mode.height - 10, fill = "white", outline = "")
@@ -1393,15 +1393,15 @@ class GameMode(Mode):
         canvas.create_image(mode.cx // 2 - 30, mode.cy + 50, image = customer)
         canvas.create_image(mode.cx + mode.cx // 2 - 60, mode.cy + 50, image = customer)
         
-        canvas.create_text(mode.cx // 2 - 30, 70, text=StartMode.name, font="Silom 30 bold")
-        canvas.create_text(mode.cx + mode.cx // 2 - 60, 70, text= "".join(LoginScreen.username), font="Silom 30 bold")
+        canvas.create_text(mode.cx // 2 - 30, 70, text=StartMode.name, font="Chicago 30 bold")
+        canvas.create_text(mode.cx + mode.cx // 2 - 60, 70, text= "".join(LoginScreen.username), font="Chicago 30 bold")
         canvas.create_rectangle(mode.cx - 100 - 30, 50, mode.cx + 100 - 30, 160, fill = "white", outline = "powder blue")
         canvas.create_text(mode.cx - 30, 60, text = f"Check List:\n- {mode.eyeshadowColor} eyeshadow\n- {mode.blushColor} blush\n- {mode.lipstickColor} lipstick",
                                 font = "Arial 20", anchor = "n")
         
         #submit button
         canvas.create_rectangle(mode.cx - 30 - 60, mode.cy + mode.cy//3 - 30, mode.cx - 30 + 60, mode.cy + mode.cy//3 + 30, fill = "pink", outline = "")
-        canvas.create_text(mode.cx - 30, mode.cy + mode.cy//3, text = "SUBMIT", font = "Silom 22")
+        canvas.create_text(mode.cx - 30, mode.cy + mode.cy//3, text = "SUBMIT", font = "Chicago 22")
 
         #instructions to open help and pause
         canvas.create_rectangle(10, mode.height - 70, 190, mode.height - 10, fill = "white", outline = "")
@@ -1410,7 +1410,7 @@ class GameMode(Mode):
     def timeIsUp(mode, canvas):
         if mode.timeEnd:
             canvas.create_rectangle(mode.cx - 30 - 200, mode.cy - 100, mode.cx - 30 + 200, mode.cy + 100, fill = "light gray", outline = "")
-            canvas.create_text(mode.cx - 30, mode.cy, text="Time is Up!", font="Silom 50 bold")
+            canvas.create_text(mode.cx - 30, mode.cy, text="Time is Up!", font="Chicago 50 bold")
 
     def drawColorOptions(mode, canvas):
         boxHeight = mode.height // 4
@@ -1600,18 +1600,18 @@ class GameMode(Mode):
         #labels
         canvas.create_rectangle(mode.cx // 2 - 150, 90 - 45, mode.cx // 2 + 150, 90 + 45, fill = 'white', outline = '')
         canvas.create_rectangle(mode.cx + mode.cx // 2 - 150, 90 - 45, mode.cx + mode.cx // 2 + 150, 90 + 45, fill = 'white', outline = '')
-        canvas.create_text(mode.cx // 2, 70, text=StartMode.name, font="Silom 30 bold")
-        canvas.create_text(mode.cx // 2, 110, text=f'Score: {GameMode.opponentScore}%', font="Silom 30 ")
-        canvas.create_text(mode.cx + mode.cx // 2, 70, text="".join(LoginScreen.username), font="Silom 30 bold")
-        canvas.create_text(mode.cx + mode.cx // 2, 110, text=f'Score: {GameMode.yourScore}%', font="Silom 30 ")
+        canvas.create_text(mode.cx // 2, 70, text=StartMode.name, font="Chicago 30 bold")
+        canvas.create_text(mode.cx // 2, 110, text=f'Score: {GameMode.opponentScore}%', font="Chicago 30 ")
+        canvas.create_text(mode.cx + mode.cx // 2, 70, text="".join(LoginScreen.username), font="Chicago 30 bold")
+        canvas.create_text(mode.cx + mode.cx // 2, 110, text=f'Score: {GameMode.yourScore}%', font="Chicago 30 ")
 
         canvas.create_rectangle(0, mode.cy - 65 - 40, mode.width, mode.cy - 65 + 40, fill = 'white', outline = '')
         if GameMode.yourScore > GameMode.opponentScore:
-            canvas.create_text(mode.cx, mode.cy - 65, text='You Win! Congrats on getting hired!', font="Silom 40 bold")
+            canvas.create_text(mode.cx, mode.cy - 65, text='You Win! Congrats on getting hired!', font="Chicago 40 bold")
         elif GameMode.yourScore < GameMode.opponentScore:
-            canvas.create_text(mode.cx, mode.cy - 65, text=f'Better luck next time, {StartMode.name} beat you.', font="Silom 40 bold")
+            canvas.create_text(mode.cx, mode.cy - 65, text=f'Better luck next time, {StartMode.name} beat you.', font="Chicago 40 bold")
         elif GameMode.yourScore == GameMode.opponentScore:
-            canvas.create_text(mode.cx, mode.cy - 65, text=f"It's a tie... try to beat {StartMode.name} next time.", font="Silom 40 bold")
+            canvas.create_text(mode.cx, mode.cy - 65, text=f"It's a tie... try to beat {StartMode.name} next time.", font="Chicago 40 bold")
     
         canvas.create_rectangle(mode.cx // 2 - 90, mode.cy + mode.cy//3 - 100, mode.cx // 2 + 90, mode.cy + mode.cy//3 + 100, fill = 'white')
         canvas.create_rectangle(mode.cx + mode.cx // 2 - 90, mode.cy + mode.cy//3 - 100, mode.cx + mode.cx // 2 + 90, mode.cy + mode.cy//3 + 100, fill = 'white')
@@ -1634,7 +1634,7 @@ class GameMode(Mode):
 
         #restart button
         canvas.create_rectangle(mode.cx - 100, mode.height - 80 - 40, mode.cx + 100, mode.height - 80 + 40, fill = "pink", outline = "")
-        canvas.create_text(mode.cx, mode.height - 80, text = "Try Again", font = "Silom 30 bold", fill = "black")
+        canvas.create_text(mode.cx, mode.height - 80, text = "Try Again", font = "Chicago 30 bold", fill = "black")
 
         #show leaderboard option
         canvas.create_rectangle(10, mode.height - 45, 210, mode.height - 10, fill = "white", outline = "")
