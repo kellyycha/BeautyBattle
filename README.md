@@ -1,5 +1,7 @@
 # termProject
 
+Demo Video: https://youtu.be/kSndKDT-QOY
+
 Kelly Cha
 15-112 Term Project
 
@@ -22,4 +24,3 @@ Modules List:
 
 Download this font: https://ttfonts.net/font/5767_Chicago.htm
 
-Video Demo: https://youtu.be/kSndKDT-QOY
