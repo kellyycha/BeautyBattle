@@ -1,11 +1,10 @@
-# termProject
-
-Demo Video: https://youtu.be/kSndKDT-QOY
+# Term Project - Beauty Battle
 
 Kelly Cha
 15-112 Term Project
 
 Project Name: Beauty Battle
+Demo Video: https://youtu.be/kSndKDT-QOY
 
 Description: 
 You want a spot as an employee of the KC beauty studio, but there is one opening. 
